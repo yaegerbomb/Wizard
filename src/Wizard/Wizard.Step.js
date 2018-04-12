@@ -1,26 +1,33 @@
 import React from "react";
 
 import { WizardContext } from "./Wizard.Provider";
+import { WizardInput } from "./WizardInput";
 
 class Step extends React.Component {
+  renderInput = component => {};
   renderComponents = (components, selectProduct, deselectProduct) => {
     return components.map((component, key) => {
-      return (
-        <div key={`c-${key}`}>
-          {component.label}
-          <button
-            type="button"
-            class="btn btn-primary"
-            onClick={() =>
-              component.selected
-                ? deselectProduct(component)
-                : selectProduct(component)
-            }
-          >
-            {component.selected ? "Remove" : "Add"}
-          </button>
-        </div>
-      );
+      switch (component.type) {
+        case "textInput":
+          return <WizardInput component={component} />;
+        default:
+          return (
+            <div key={`c-${key}`}>
+              {component.label}
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() =>
+                  component.selected
+                    ? deselectProduct(component)
+                    : selectProduct(component)
+                }
+              >
+                {component.selected ? "Remove" : "Add"}
+              </button>
+            </div>
+          );
+      }
     });
   };
   render() {

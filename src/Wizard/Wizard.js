@@ -9,7 +9,9 @@ export const Wizard = () => (
       <React.Fragment>
         <div>
           {state.steps.map((step, key) => (
-            <div onClick={() => setStep(key)}>{step.title}</div>
+            <div key={`s-${key}`} onClick={() => setStep(key)}>
+              {step.title}
+            </div>
           ))}
         </div>
         <div>

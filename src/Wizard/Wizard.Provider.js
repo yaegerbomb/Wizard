@@ -25,6 +25,7 @@ class WizardProvider extends React.Component {
         components: [
           {
             type: "textInput",
+            value: "",
             label: "Square Feet",
             required: true,
             valid: false,
@@ -32,6 +33,7 @@ class WizardProvider extends React.Component {
           },
           {
             type: "radioInput",
+            valie: "",
             label: "Building Type",
             required: true,
             valid: false,
@@ -85,6 +87,25 @@ class WizardProvider extends React.Component {
           },
           setStep: stepNumber => {
             this.setState({ currentStep: stepNumber });
+          },
+          updateComponentValue: (component, val) => {
+            let { steps, currentStep, globals } = this.state;
+            let stepToModify = steps[currentStep];
+            let componentToModifyIndex = stepToModify.components.findIndex(
+              c => c === component
+            );
+            let componentToModify =
+              stepToModify.components[componentToModifyIndex];
+            componentToModify.value = val;
+            stepToModify.components[componentToModifyIndex] = componentToModify;
+            steps[currentStep] = stepToModify;
+
+            componentToModify.changes.forEach(c => {
+              let globalToModifyIndex = globals.findIndex(g => g.name === c);
+              globals[globalToModifyIndex].value = val;
+            });
+
+            this.setState({ globals: globals, steps: steps });
           },
           selectProduct: product => {
             let { steps, currentStep, globals } = this.state;
