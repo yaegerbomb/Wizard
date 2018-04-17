@@ -16,8 +16,11 @@ class Product extends React.Component {
             </button>
             {!component.byGlobal && (
               <div>
-                <label>{component.otherValueLabel}</label>
+                <label htmlFor={`product-${component.label}`}>
+                  {component.otherValueLabel}
+                </label>
                 <input
+                  name={`product-${component.label}`}
                   type="number"
                   defaultValue={component.otherQuantity}
                   onChange={e =>

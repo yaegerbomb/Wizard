@@ -12,6 +12,7 @@ export const Input = ({ component }) => (
       <div>
         <label htmlFor={`input-${component.label}`}>{component.label}</label>
         <input
+          name={`input-${component.label}`}
           type={component.type}
           placeholder=""
           onChange={e => updateComponentValue(component, e.target.value)}
