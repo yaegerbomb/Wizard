@@ -1,4 +1,5 @@
 import React from "react";
+import validator from "validator";
 
 export const WizardContext = React.createContext();
 
@@ -291,7 +292,7 @@ class WizardProvider extends React.Component {
             changes: [{ name: "phoneNumber", value: "value" }]
           },
           {
-            type: "text",
+            type: "email",
             value: "",
             placeholder: "Email",
             label: "Email",
@@ -471,6 +472,8 @@ class WizardProvider extends React.Component {
           }
           componentToModify.valid = found;
         });
+      } else if (componentToModify.type === "email") {
+        componentToModify.valid = validator.isEmail(val);
       } else {
         componentToModify.valid = true;
       }

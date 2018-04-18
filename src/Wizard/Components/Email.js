@@ -1,9 +1,8 @@
 import React from "react";
-import InputMask from "react-input-mask";
 
 import { WizardContext } from "../Wizard.Provider.js";
 
-export const Phone = ({ component }) => (
+export const Email = ({ component }) => (
   <WizardContext.Consumer>
     {({
       getComponentValue,
@@ -11,12 +10,11 @@ export const Phone = ({ component }) => (
       showComponentInvalidMessage
     }) => (
       <div>
-        <label htmlFor={`input-phone`}>Phone</label>
-        <InputMask
+        <label htmlFor={`input-email`}>Email</label>
+        <input
           name={`input-${component.label}`}
-          mask="(999) 999-9999"
-          type={component.type}
-          placeholder="Phone"
+          type="email"
+          placeholder={component.placeholder ? component.placeholder : ""}
           onChange={e => updateComponentValue(component, e.target.value)}
           value={getComponentValue(component)}
           disabled={component.disabled}

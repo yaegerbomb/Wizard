@@ -1,7 +1,15 @@
 import React from "react";
 
 import { WizardContext } from "./Wizard.Provider";
-import { Input, Message, Radio, Product, Link, Phone } from "./Components";
+import {
+  Input,
+  Message,
+  Radio,
+  Product,
+  Link,
+  Phone,
+  Email
+} from "./Components";
 
 class Step extends React.Component {
   renderInput = component => {};
@@ -11,7 +19,6 @@ class Step extends React.Component {
         switch (component.type) {
           case "text":
           case "number":
-          case "email":
           case "password":
             return <Input key={`wsc-${key}`} component={component} />;
           case "radio":
@@ -24,6 +31,8 @@ class Step extends React.Component {
             return <Link key={`wsc-${key}`} component={component} />;
           case "phone":
             return <Phone key={`wsc-${key}`} component={component} />;
+          case "email":
+            return <Email key={`wsc-${key}`} component={component} />;
           default:
             return null;
         }
