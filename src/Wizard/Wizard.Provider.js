@@ -39,6 +39,51 @@ class WizardProvider extends React.Component {
         name: "buildingPrice",
         value: 20,
         label: "Building Price"
+      },
+      {
+        name: "termsOfServiceClicked",
+        value: false,
+        label: "Terms Of Service Clicked"
+      },
+      {
+        name: "firstName",
+        value: "",
+        label: "First Name"
+      },
+      {
+        name: "lastName",
+        value: "",
+        label: "Last Name"
+      },
+      {
+        name: "phoneNumber",
+        value: "",
+        label: "Phone Number"
+      },
+      {
+        name: "email",
+        value: "",
+        label: "Email"
+      },
+      {
+        name: "address",
+        value: "",
+        label: "Address"
+      },
+      {
+        name: "buildingNumber",
+        value: "",
+        label: "Apartment / Condo Number"
+      },
+      {
+        name: "city",
+        value: "Seattle",
+        label: "City"
+      },
+      {
+        name: "state",
+        value: "Washington",
+        label: "State"
       }
     ],
     steps: [
@@ -182,9 +227,128 @@ class WizardProvider extends React.Component {
             showOtherQuantity: true
           }
         ]
+      },
+      {
+        title: "Step 4",
+        productSelector: true,
+        validType: "none",
+        valid: false,
+        components: [
+          {
+            type: "message",
+            value:
+              "Before continuing you must agree to our terms, conditions and exclusions of service. Please read those below."
+          },
+          {
+            type: "link",
+            value: false,
+            label: "Terms of Service",
+            url: "http://www.google.com",
+            required: true,
+            valid: false,
+            changes: [{ name: "termsOfServiceClicked", value: "value" }]
+          }
+        ]
+      },
+      {
+        title: "Step 5",
+        productSelector: true,
+        validType: "none",
+        valid: false,
+        components: [
+          {
+            type: "message",
+            value:
+              "Please enter your contact details below. After you are finished, click next and a confirmation email will be sent to you. Our secretary will contact you within one business day to schedule your selected services at a time that is convenient for you."
+          },
+          {
+            type: "message",
+            value: "Reminder: Our hours are Monday through Friday 8am to 6pm."
+          },
+          {
+            type: "text",
+            value: "",
+            placeholder: "First Name",
+            label: "First Name",
+            required: true,
+            valid: false,
+            changes: [{ name: "firstName", value: "value" }]
+          },
+          {
+            type: "text",
+            value: "",
+            placeholder: "Last Name",
+            label: "Last Name",
+            required: true,
+            valid: false,
+            changes: [{ name: "lastName", value: "value" }]
+          },
+          {
+            type: "phone",
+            value: "",
+            required: true,
+            valid: false,
+            changes: [{ name: "phoneNumber", value: "value" }]
+          },
+          {
+            type: "text",
+            value: "",
+            placeholder: "Email",
+            label: "Email",
+            required: true,
+            valid: false,
+            changes: [{ name: "email", value: "value" }]
+          },
+          {
+            type: "text",
+            value: "",
+            placeholder: "Address",
+            label: "Address",
+            required: true,
+            valid: false,
+            changes: [{ name: "address", value: "value" }]
+          },
+          {
+            type: "text",
+            value: "",
+            placeholder: "#",
+            label: "Apartment / Condo Number",
+            required: true,
+            valid: false,
+            changes: [{ name: "buildingNumber", value: "value" }],
+            visible: [
+              {
+                name: "buildingType",
+                value: "singleHome",
+                operation: "!equals"
+              }
+            ]
+          },
+          {
+            type: "text",
+            value: "",
+            placeholder: "City",
+            label: "City",
+            required: true,
+            valid: true,
+            disabled: true,
+            changes: [{ name: "city", value: "value" }]
+          },
+          {
+            type: "text",
+            value: "",
+            placeholder: "State",
+            label: "State",
+            required: true,
+            valid: true,
+            disabled: true,
+            changes: [{ name: "state", value: "value" }]
+          }
+        ]
       }
     ],
-    currentStep: 0
+    currentStep: 0,
+    submitted: false
   };
   incrementStep = () => {
     let currentStep = this.state.currentStep;
@@ -208,15 +372,78 @@ class WizardProvider extends React.Component {
 
     //check if all components are valid
     let valid = true;
+
     currentStepToModify.components.forEach((c, key) => {
-      if (c.required && !c.valid) {
+      if (c.required && !c.valid && this.isComponentVisible(c)) {
         valid = false;
       }
     });
+
+    if (currentStepToModify.validType === "oneOf") {
+      let selected = currentStepToModify.components.filter(c => c.selected)
+        .length;
+      if (selected !== 1) {
+        valid = false;
+      }
+    }
+
     return valid;
   };
+  isFirstStep = () => {
+    return this.state.currentStep === 0;
+  };
+  isLastStep = () => {
+    return this.state.currentStep === this.state.steps.length - 1;
+  };
   setStep = stepNumber => {
-    this.setState({ currentStep: stepNumber });
+    if (stepNumber !== 0) {
+      let valid = true;
+      for (let i = 0; i < stepNumber; i++) {
+        if (!this.isStepValid(i)) {
+          valid = false;
+        }
+      }
+      if (valid) {
+        this.setState({ currentStep: stepNumber });
+      }
+    } else {
+      this.setState({ currentStep: stepNumber });
+    }
+  };
+  isComponentVisible = component => {
+    let show = true;
+
+    if (component.visible && component.visible.length > 0) {
+      component.visible.forEach(v => {
+        const global = this.state.globals.find(g => {
+          return g.name === v.name;
+        });
+
+        switch (v.operation) {
+          case "greaterEqual":
+            show = global.value >= v.value;
+            break;
+          case "lessEqual":
+            show = global.value <= v.value;
+            break;
+          case "less":
+            show = global.value < v.value;
+            break;
+          case "greater":
+            show = global.value > v.value;
+            break;
+          case "!equals":
+            show = global.value !== v.value;
+            break;
+          case "equals":
+          default:
+            show = global.value === v.value;
+            break;
+        }
+      });
+    }
+
+    return show;
   };
   //used for non product components to update global values
   updateComponentValue = (component, val) => {
@@ -228,6 +455,7 @@ class WizardProvider extends React.Component {
 
     //modify component value
     let componentToModify = stepToModify.components[componentToModifyIndex];
+    componentToModify.previousValue = componentToModify.value;
     componentToModify.value = val;
 
     //whether we are valid or not
@@ -254,12 +482,16 @@ class WizardProvider extends React.Component {
     componentToModify.changes.forEach(c => {
       const globalToModifyIndex = globals.findIndex(g => g.name === c.name);
       if (c.value === "value") {
+        globals[globalToModifyIndex].previousValue =
+          globals[globalToModifyIndex].value;
         globals[globalToModifyIndex].value = val;
       } else {
         const specialValue = componentToModify.values.find(v => {
           return v.value === val;
         });
         if (specialValue) {
+          globals[globalToModifyIndex].previousValue =
+            globals[globalToModifyIndex].value;
           globals[globalToModifyIndex].value = specialValue[c.value];
         }
       }
@@ -349,6 +581,8 @@ class WizardProvider extends React.Component {
             let globalToModifyIndex = globals.findIndex(
               g => g.name === ch.name
             );
+            globals[globalToModifyIndex].previousValue =
+              globals[globalToModifyIndex].value;
             globals[globalToModifyIndex].value += price;
           });
         } else {
@@ -356,6 +590,8 @@ class WizardProvider extends React.Component {
             let globalToModifyIndex = globals.findIndex(
               g => g.name === ch.name
             );
+            globals[globalToModifyIndex].previousValue =
+              globals[globalToModifyIndex].value;
             globals[globalToModifyIndex].value -= c.value;
             c.value = 0;
           });
@@ -403,6 +639,8 @@ class WizardProvider extends React.Component {
         //add our value to each global
         c.changes.forEach(ch => {
           let globalToModifyIndex = globals.findIndex(g => g.name === ch.name);
+          globals[globalToModifyIndex].previousValue =
+            globals[globalToModifyIndex].value;
           globals[globalToModifyIndex].value -= c.value;
           globals[globalToModifyIndex].value += price;
         });
@@ -414,6 +652,9 @@ class WizardProvider extends React.Component {
     steps[currentStep] = stepToModify;
     this.setState({ steps: steps, globals: globals });
   };
+  submit = () => {
+    this.setState({ submitted: true });
+  };
   render() {
     return (
       <WizardContext.Provider
@@ -422,17 +663,23 @@ class WizardProvider extends React.Component {
           incrementStep: this.incrementStep,
           decrementStep: this.decrementStep,
           isStepValid: this.isStepValid,
+          isFirstStep: this.isFirstStep,
+          isLastStep: this.isLastStep,
           setStep: this.setStep,
+          isComponentVisible: this.isComponentVisible,
           updateComponentValue: this.updateComponentValue,
           showComponentInvalidMessage: this.showComponentInvalidMessage,
           getComponentValue: this.getComponentValue,
           resetProducts: this.resetProducts,
           toggleProduct: this.toggleProduct,
-          toggleQuantityProduct: this.toggleQuantityProduct
+          toggleQuantityProduct: this.toggleQuantityProduct,
+          submit: this.submit
         }}
       >
         {this.props.children}
-        <div style={{ marginTop: "40px" }}>{JSON.stringify(this.state)}</div>
+        <div style={{ marginTop: "40px" }}>
+          <pre>{JSON.stringify(this.state, null, 2)}</pre>
+        </div>
       </WizardContext.Provider>
     );
   }

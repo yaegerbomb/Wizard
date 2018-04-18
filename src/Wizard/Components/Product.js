@@ -11,9 +11,11 @@ class Product extends React.Component {
           <div>
             <div>{component.label}</div>
             <div>{component.description}</div>
-            <button type="button" onClick={() => toggleProduct(component)}>
-              {component.selected ? "Remove" : "Add"}
-            </button>
+            {component.byGlobal && (
+              <button type="button" onClick={() => toggleProduct(component)}>
+                {component.selected ? "Remove" : "Add"}
+              </button>
+            )}
             {!component.byGlobal && (
               <div>
                 <label htmlFor={`product-${component.label}`}>
