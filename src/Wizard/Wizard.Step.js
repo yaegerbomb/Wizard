@@ -8,7 +8,8 @@ import {
   Product,
   Link,
   Phone,
-  Email
+  Email,
+  TOS
 } from "./Components";
 
 class Step extends React.Component {
@@ -33,6 +34,8 @@ class Step extends React.Component {
             return <Phone key={`wsc-${key}`} component={component} />;
           case "email":
             return <Email key={`wsc-${key}`} component={component} />;
+          case "tos":
+            return <TOS key={`wsc-${key}`} component={component} />;
           default:
             return null;
         }
