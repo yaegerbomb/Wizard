@@ -6,7 +6,7 @@ export const Navigator = () => (
   <WizardContext.Consumer>
     {({ state, setStep, isStepValid }) => (
       <React.Fragment>
-        <div>
+        <div className="step-buttons">
           {state.steps.map((step, key) => (
             <div
               key={`s-${key}`}
@@ -19,6 +19,13 @@ export const Navigator = () => (
                   setStep(key);
                 }
               }}
+              className={
+                key === state.currentStep
+                  ? "step-button active"
+                  : key <= state.currentStep
+                    ? "step-button complete"
+                    : "step-button"
+              }
             >
               {step.title}
             </div>

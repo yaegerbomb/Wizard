@@ -5,6 +5,7 @@ import { Link } from "./Link";
 import { Phone } from "./Phone";
 import { Email } from "./Email";
 import { TOS } from "./TOS";
-import Product from "./Product";
+import { Total } from "./Total";
+import { Product } from "./Product";
 
-export { Input, Message, Radio, Product, Link, Phone, Email, TOS };
+export { Input, Message, Radio, Product, Link, Phone, Email, Total, TOS };

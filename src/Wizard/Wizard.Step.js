@@ -9,11 +9,11 @@ import {
   Link,
   Phone,
   Email,
-  TOS
+  TOS,
+  Total
 } from "./Components";
 
 class Step extends React.Component {
-  renderInput = component => {};
   renderComponents = (components, isComponentVisible) => {
     return components.map((component, key) => {
       if (isComponentVisible(component)) {
@@ -36,6 +36,8 @@ class Step extends React.Component {
             return <Email key={`wsc-${key}`} component={component} />;
           case "tos":
             return <TOS key={`wsc-${key}`} component={component} />;
+          case "total":
+            return <Total key={`wsc-${key}`} component={component} />;
           default:
             return null;
         }
@@ -48,7 +50,7 @@ class Step extends React.Component {
     return (
       <WizardContext.Consumer>
         {({ state, isComponentVisible }) => (
-          <div>
+          <div className="step-view">
             {this.renderComponents(
               state.steps[state.currentStep].components,
               isComponentVisible

@@ -13,13 +13,19 @@ export const WizardStepButtons = () => (
       isLastStep,
       submit
     }) => (
-      <div>
-        <button type="button" onClick={decrementStep} disabled={isFirstStep()}>
+      <div className="button-steps">
+        <button
+          className="button"
+          type="button"
+          onClick={decrementStep}
+          disabled={isFirstStep()}
+        >
           Previous
         </button>
         {!isLastStep() && (
           <button
             type="button"
+            className="button"
             disabled={!isStepValid(state.currentStep)}
             onClick={incrementStep}
           >
@@ -28,6 +34,7 @@ export const WizardStepButtons = () => (
         )}
         {isLastStep() && (
           <button
+            className="button"
             type="button"
             disabled={!isStepValid(state.currentStep) || state.submitted}
             onClick={submit}

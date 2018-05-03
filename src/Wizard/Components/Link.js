@@ -5,7 +5,7 @@ import { WizardContext } from "../Wizard.Provider.js";
 export const Link = ({ component }) => (
   <WizardContext.Consumer>
     {({ updateComponentValue, showComponentInvalidMessage }) => (
-      <div>
+      <div className="c-message">
         <a
           href={component.url}
           target="_blank"

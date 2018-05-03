@@ -16,15 +16,25 @@ export const TOS = ({ component }) => (
       <div>
         <div style={tosBox}>
           <div dangerouslySetInnerHTML={{ __html: component.text }} />
-          <label>
-            I Accept
-            <input
-              name="accept"
-              type="checkbox"
-              checked={getComponentValue(component)}
-              onChange={e => updateComponentValue(component, e.target.checked)}
-            />
-          </label>
+          <div
+            className={
+              getComponentValue(component)
+                ? "tos-accept selected"
+                : "tos-accept"
+            }
+          >
+            <label>
+              I Accept
+              <input
+                name="accept"
+                type="checkbox"
+                checked={getComponentValue(component)}
+                onChange={e =>
+                  updateComponentValue(component, e.target.checked)
+                }
+              />
+            </label>
+          </div>
         </div>
       </div>
     )}

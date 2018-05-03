@@ -1,6 +1,7 @@
 import React from "react";
 
 import { WizardContext } from "../Wizard.Provider.js";
+import slugify from "../../Utils/slugify.js";
 
 export const Email = ({ component }) => (
   <WizardContext.Consumer>
@@ -8,21 +9,27 @@ export const Email = ({ component }) => (
       getComponentValue,
       updateComponentValue,
       showComponentInvalidMessage
-    }) => (
-      <div>
-        <label htmlFor={`input-email`}>Email</label>
-        <input
-          name={`input-${component.label}`}
-          type="email"
-          placeholder={component.placeholder ? component.placeholder : ""}
-          onChange={e => updateComponentValue(component, e.target.value)}
-          value={getComponentValue(component)}
-          disabled={component.disabled}
-        />
-        {showComponentInvalidMessage(component) && (
-          <div>{component.invalidMessage} </div>
-        )}
-      </div>
-    )}
+    }) => {
+      let id = slugify(component.label);
+      return (
+        <div className="c-form-group contact-input">
+          <label className="c-form-label" htmlFor={id}>
+            Email
+          </label>
+          <input
+            className="c-form-input"
+            id={id}
+            type="email"
+            placeholder={component.placeholder ? component.placeholder : ""}
+            onChange={e => updateComponentValue(component, e.target.value)}
+            value={getComponentValue(component)}
+            disabled={component.disabled}
+          />
+          {showComponentInvalidMessage(component) && (
+            <div>{component.invalidMessage} </div>
+          )}
+        </div>
+      );
+    }}
   </WizardContext.Consumer>
 );
