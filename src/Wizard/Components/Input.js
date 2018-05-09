@@ -19,8 +19,9 @@ export const Input = ({ component }) => (
           <input
             id={id}
             className="c-form-input"
-            name={`input-${component.label}`}
+            name={id}
             type={component.type}
+            maxLength={component.maxLength ? component.maxLength : null}
             placeholder={component.placeholder ? component.placeholder : ""}
             onChange={e => updateComponentValue(component, e.target.value)}
             value={getComponentValue(component)}

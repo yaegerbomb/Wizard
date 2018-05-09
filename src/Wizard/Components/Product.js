@@ -45,7 +45,7 @@ export const Product = ({ component }) => {
                 className="c-form-input"
                 name={`product-${component.label}`}
                 type="number"
-                defaultValue={component.otherQuantity}
+                value={component.otherQuantity}
                 onChange={e => toggleQuantityProduct(component, e.target.value)}
               />
             </div>

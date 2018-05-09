@@ -14,7 +14,7 @@ export const Email = ({ component }) => (
       return (
         <div className="c-form-group contact-input">
           <label className="c-form-label" htmlFor={id}>
-            Email
+            {component.label}
           </label>
           <input
             className="c-form-input"

@@ -81,6 +81,11 @@ class WizardProvider extends React.Component {
         label: "Email"
       },
       {
+        name: "emailVerify",
+        value: "",
+        label: "Verify Email"
+      },
+      {
         name: "address",
         value: "",
         label: "Address"
@@ -112,7 +117,7 @@ class WizardProvider extends React.Component {
               "If you would like to schedule for cleaning services please provide to us two pieces of information so we may provide an accurate quote to you."
           },
           {
-            type: "text",
+            type: "number",
             value: "",
             values: [
               { value: "98040", price: 0 },
@@ -172,6 +177,7 @@ class WizardProvider extends React.Component {
             required: true,
             valid: false,
             minChars: 5,
+            max: 99999,
             invalidMessage:
               "I am sorry but we do not service this zip code at this time.",
             changes: [
@@ -182,6 +188,8 @@ class WizardProvider extends React.Component {
           {
             type: "number",
             value: 600,
+            min: 1,
+            max: 9999,
             label:
               "What is the approximate interior square footage of your home?",
             required: true,
@@ -232,6 +240,7 @@ class WizardProvider extends React.Component {
             value: 0,
             byGlobal: true,
             priceModified: ["squareFoot"],
+            minCharge: 120,
             changes: [{ name: "totalPrice", value: "value" }],
             selected: false
           },
@@ -300,7 +309,13 @@ class WizardProvider extends React.Component {
             otherQuantity: 0,
             otherQuantityMin: 1,
             showOtherQuantity: true,
-            minCharge: 120
+            minCharge: 120,
+            relatedTo: [
+              {
+                name: "squareFoot",
+                action: "lessThanOrEqualTo"
+              }
+            ]
           },
           {
             type: "product",
@@ -367,6 +382,8 @@ class WizardProvider extends React.Component {
             placeholder: "First Name",
             label: "First Name",
             required: true,
+            maxLength: 14,
+            regex: "alpha",
             valid: false,
             changes: [{ name: "firstName", value: "value" }]
           },
@@ -376,6 +393,8 @@ class WizardProvider extends React.Component {
             placeholder: "Last Name",
             label: "Last Name",
             required: true,
+            maxLength: 14,
+            regex: "alpha",
             valid: false,
             changes: [{ name: "lastName", value: "value" }]
           },
@@ -397,6 +416,19 @@ class WizardProvider extends React.Component {
             changes: [{ name: "email", value: "value" }]
           },
           {
+            type: "email",
+            value: "",
+            placeholder: "Verify Email",
+            label: "Verify Email",
+            required: true,
+            valid: false,
+            validates: {
+              name: "email",
+              is: "equal"
+            },
+            changes: [{ name: "emailVerify", value: "value" }]
+          },
+          {
             type: "text",
             value: "",
             placeholder: "Address",
@@ -412,6 +444,8 @@ class WizardProvider extends React.Component {
             label: "Apartment / Condo Number",
             required: true,
             valid: false,
+            maxLength: 4,
+            regex: "alphanumeric",
             changes: [{ name: "buildingNumber", value: "value" }],
             visible: [
               {
@@ -555,17 +589,99 @@ class WizardProvider extends React.Component {
 
     //modify component value
     let componentToModify = stepToModify.components[componentToModifyIndex];
+
+    //check if we are a number and if we are that we dont have a min/max value we can be
+    if (componentToModify.type === "number") {
+      //safari fails at type=number inputs only allowing numbers
+      val = val.replace(/[^0-9]/gi, "");
+      if (componentToModify.min && val < componentToModify.min) {
+        val = componentToModify.min;
+      }
+      if (componentToModify.max && val > componentToModify.max) {
+        val = componentToModify.max;
+      }
+    }
+
+    //if we have a max length then cut off after the max char limit
+    if (
+      componentToModify.type !== "number" &&
+      componentToModify.maxLength &&
+      val.length > componentToModify.maxLength
+    ) {
+      val = val.substring(0, componentToModify.maxLength);
+    }
+
+    //if we have a regex then regex value before applying
+    if (componentToModify.regex) {
+      if (componentToModify.regex === "numeric") {
+        val = val.replace(/[^0-9]/gi, "");
+      }
+      if (componentToModify.regex === "alpha") {
+        val = val.replace(/[^a-z]/gi, "");
+      }
+      if (componentToModify.regex === "alphanumeric") {
+        val = val.replace(/[^a-z0-9]/gi, "");
+      }
+    }
+
+    //check if we are related to any external values and if so act upon them
+    if (componentToModify.relatedTo) {
+      componentToModify.relatedTo.forEach(r => {
+        const globalToReferenceIndex = globals.findIndex(
+          g => g.name === r.name
+        );
+        const globalValue = globals[globalToReferenceIndex].value;
+
+        switch (r.action) {
+          case "lessThanOrEqualTo":
+            if (val >= globalValue) {
+              val = globalValue;
+            }
+            break;
+          case "greaterThanOrEqualTo":
+            if (val <= globalValue) {
+              val = globalValue;
+            }
+            break;
+          case "lessThan":
+            if (val > globalValue) {
+              val = globalValue;
+            }
+            break;
+          case "greaterThan":
+            if (val < globalValue) {
+              val = globalValue;
+            }
+            break;
+          default:
+        }
+      });
+    }
+
     componentToModify.previousValue = componentToModify.value
       ? componentToModify.value
       : 0;
+
     componentToModify.value = val;
 
     //whether we are valid or not
     if (!val && componentToModify.required) {
       componentToModify.valid = false;
     } else if (val && componentToModify.required) {
+      componentToModify.valid = true;
+
+      //check if we have a global value to compare to
+      if (componentToModify.validates) {
+        var globalToReferenceIndex = globals.findIndex(
+          g => g.name === componentToModify.validates.name
+        );
+        if (val != globals[globalToReferenceIndex].value) {
+          componentToModify.valid = false;
+        }
+      }
+
       //check if we have a set of predefined valued
-      if (componentToModify.values) {
+      if (componentToModify.values && componentToModify.valid) {
         let found = false;
         componentToModify.values.forEach(v => {
           if (v.value === val) {
@@ -573,10 +689,10 @@ class WizardProvider extends React.Component {
           }
           componentToModify.valid = found;
         });
-      } else if (componentToModify.type === "email") {
+      }
+
+      if (componentToModify.type === "email" && componentToModify.valid) {
         componentToModify.valid = validator.isEmail(val);
-      } else {
-        componentToModify.valid = true;
       }
     }
 
@@ -588,6 +704,7 @@ class WizardProvider extends React.Component {
       if (c.value === "value") {
         globals[globalToModifyIndex].previousValue =
           globals[globalToModifyIndex].value;
+
         globals[globalToModifyIndex].value = val;
       } else {
         const specialValue = componentToModify.values.find(v => {
@@ -613,7 +730,10 @@ class WizardProvider extends React.Component {
   showComponentInvalidMessage = component => {
     let show = false;
     if (!component.valid) {
-      if (component.minChars && component.value.length >= component.minChars) {
+      if (
+        component.minChars &&
+        component.value.toString().length >= component.minChars
+      ) {
         show = true;
       }
     }
@@ -725,11 +845,56 @@ class WizardProvider extends React.Component {
     );
     let productToToggle = stepToModify.components[productToSelectIndex];
 
+    //safari fails at type=number inputs only allowing numbers
+    value = value.replace(/[^0-9]/gi, "");
+
+    //check if we are a number and if we are that we dont have a min/max value we can be
+    if (productToToggle.min && value < productToToggle.min) {
+      value = productToToggle.min;
+    }
+    if (productToToggle.max && value > productToToggle.max) {
+      value = productToToggle.max;
+    }
+
+    //check if we are related to any external values and if so act upon them
+    if (productToToggle.relatedTo) {
+      productToToggle.relatedTo.forEach(r => {
+        const globalToReferenceIndex = globals.findIndex(
+          g => g.name === r.name
+        );
+        const globalValue = globals[globalToReferenceIndex].value;
+
+        switch (r.action) {
+          case "lessThanOrEqualTo":
+            if (value >= globalValue) {
+              value = globalValue;
+            }
+            break;
+          case "greaterThanOrEqualTo":
+            if (value <= globalValue) {
+              value = globalValue;
+            }
+            break;
+          case "lessThan":
+            if (value > globalValue) {
+              value = globalValue;
+            }
+            break;
+          case "greaterThan":
+            if (value < globalValue) {
+              value = globalValue;
+            }
+            break;
+          default:
+        }
+      });
+    }
+
     //loop through each component in the step, find our component, then calculate the price
     stepToModify.components.forEach(c => {
       if (c === productToToggle) {
         let price = 0;
-        if (value > 0) {
+        if (value > -1) {
           //find out our price
           c.otherQuantity = value;
           price = c.otherQuantity * c.price;
@@ -838,6 +1003,9 @@ class WizardProvider extends React.Component {
         }}
       >
         {this.props.children}
+        {/* <div style={{ marginTop: "25px" }}>
+          {this.state.globals.find(g => g.name === "totalPrice").value}
+        </div> */}
       </WizardContext.Provider>
     );
   }
