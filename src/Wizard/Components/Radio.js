@@ -9,12 +9,11 @@ export const Radio = ({ component }) => (
       let defaultValue = getComponentValue(component);
       return (
         <div>
-          <label htmlFor={`input-${component.label}`}>{component.label}</label>
-
           {component.values.map((v, key) => {
             const id = slugify(v.label);
+            const hiddenStyle = v.hidden ? { display: "none" } : {};
             return (
-              <div key={`r-${key}`}>
+              <div key={`r-${key}`} style={hiddenStyle}>
                 <input
                   type="radio"
                   value={v.value}

@@ -204,3 +204,8 @@
 #wizard .tos-accept.selected {
   background-color: #3a4e06;
 }
+
+#wizard .invalid {
+  color: red;
+  margin-top: 5px;
+}

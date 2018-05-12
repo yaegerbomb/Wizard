@@ -14,7 +14,7 @@ export const Link = ({ component }) => (
           {component.label}
         </a>
         {showComponentInvalidMessage(component) && (
-          <div>{component.invalidMessage} </div>
+          <div class="invalid">{component.invalidMessage} </div>
         )}
       </div>
     )}

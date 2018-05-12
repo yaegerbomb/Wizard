@@ -50,7 +50,7 @@ class Step extends React.Component {
     return (
       <WizardContext.Consumer>
         {({ state, isComponentVisible }) => (
-          <div className="step-view">
+          <div id="step" className="step-view">
             {this.renderComponents(
               state.steps[state.currentStep].components,
               isComponentVisible

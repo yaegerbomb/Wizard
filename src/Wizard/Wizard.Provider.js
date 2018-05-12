@@ -8,7 +8,7 @@ class WizardProvider extends React.Component {
     globals: [
       {
         name: "totalPrice",
-        value: 20,
+        value: 0,
         label: "Total Price"
       },
       {
@@ -45,7 +45,7 @@ class WizardProvider extends React.Component {
       },
       {
         name: "buildingPrice",
-        value: 20,
+        value: 0,
         label: "Building Price",
         onChange: [
           {
@@ -120,76 +120,78 @@ class WizardProvider extends React.Component {
             type: "number",
             value: "",
             values: [
-              { value: "98040", price: 0 },
-              { value: "98101", price: 45 },
-              { value: "98102", price: 37.75 },
-              { value: "98103", price: 27.25 },
-              { value: "98104", price: 43.5 },
-              { value: "98105", price: 45.75 },
-              { value: "98106", price: 43.75 },
-              { value: "98107", price: 18 },
-              { value: "98108", price: 36 },
-              { value: "98109", price: 37.75 },
-              { value: "98111", price: 30.75 },
-              { value: "98112", price: 40.25 },
-              { value: "98113", price: 29 },
-              { value: "98114", price: 28.5 },
-              { value: "98115", price: 41.25 },
-              { value: "98116", price: 43 },
-              { value: "98117", price: 30.25 },
-              { value: "98118", price: 48.25 },
-              { value: "98119", price: 16 },
-              { value: "98121", price: 35.25 },
-              { value: "98122", price: 38.75 },
-              { value: "98124", price: 31.25 },
-              { value: "98125", price: 46.75 },
-              { value: "98126", price: 35 },
-              { value: "98127", price: 31.25 },
-              { value: "98129", price: 18.5 },
-              { value: "98131", price: 17.25 },
-              { value: "98132", price: 31.25 },
-              { value: "98133", price: 48.75 },
-              { value: "98134", price: 36.25 },
-              { value: "98136", price: 44.25 },
-              { value: "98139", price: 32.5 },
-              { value: "98141", price: 32.5 },
-              { value: "98144", price: 35.25 },
-              { value: "98145", price: 35 },
-              { value: "98146", price: 47.75 },
-              { value: "98154", price: 44.5 },
-              { value: "98161", price: 29.5 },
-              { value: "98164", price: 45 },
-              { value: "98165", price: 30 },
-              { value: "98170", price: 30 },
-              { value: "98174", price: 45.75 },
-              { value: "98175", price: 30 },
-              { value: "98177", price: 39.75 },
-              { value: "98178", price: 52.75 },
-              { value: "98181", price: 30.25 },
-              { value: "98185", price: 29 },
-              { value: "98190", price: 30 },
-              { value: "98191", price: 28.75 },
-              { value: "98194", price: 30 },
-              { value: "98195", price: 29.5 },
-              { value: "98199", price: 0 }
+              { value: "98040", price: 0, city: "Mercer Island" },
+              { value: "98101", price: 45, city: "Seattle" },
+              { value: "98102", price: 37.75, city: "Seattle" },
+              { value: "98103", price: 27.25, city: "Seattle" },
+              { value: "98104", price: 43.5, city: "Seattle" },
+              { value: "98105", price: 45.75, city: "Seattle" },
+              { value: "98106", price: 43.75, city: "Seattle" },
+              { value: "98107", price: 18, city: "Seattle" },
+              { value: "98108", price: 36, city: "Seattle" },
+              { value: "98109", price: 37.75, city: "Seattle" },
+              { value: "98111", price: 30.75, city: "Seattle" },
+              { value: "98112", price: 40.25, city: "Seattle" },
+              { value: "98113", price: 29, city: "Seattle" },
+              { value: "98114", price: 28.5, city: "Seattle" },
+              { value: "98115", price: 41.25, city: "Seattle" },
+              { value: "98116", price: 43, city: "Seattle" },
+              { value: "98117", price: 30.25, city: "Seattle" },
+              { value: "98118", price: 48.25, city: "Seattle" },
+              { value: "98119", price: 16, city: "Seattle" },
+              { value: "98121", price: 35.25, city: "Seattle" },
+              { value: "98122", price: 38.75, city: "Seattle" },
+              { value: "98124", price: 31.25, city: "Seattle" },
+              { value: "98125", price: 46.75, city: "Seattle" },
+              { value: "98126", price: 35, city: "Seattle" },
+              { value: "98127", price: 31.25, city: "Seattle" },
+              { value: "98129", price: 18.5, city: "Seattle" },
+              { value: "98131", price: 17.25, city: "Seattle" },
+              { value: "98132", price: 31.25, city: "Seattle" },
+              { value: "98133", price: 48.75, city: "Seattle" },
+              { value: "98134", price: 36.25, city: "Seattle" },
+              { value: "98136", price: 44.25, city: "Seattle" },
+              { value: "98139", price: 32.5, city: "Seattle" },
+              { value: "98141", price: 32.5, city: "Seattle" },
+              { value: "98144", price: 35.25, city: "Seattle" },
+              { value: "98145", price: 35, city: "Seattle" },
+              { value: "98146", price: 47.75, city: "Seattle" },
+              { value: "98154", price: 44.5, city: "Seattle" },
+              { value: "98161", price: 29.5, city: "Seattle" },
+              { value: "98164", price: 45, city: "Seattle" },
+              { value: "98165", price: 30, city: "Seattle" },
+              { value: "98170", price: 30, city: "Seattle" },
+              { value: "98174", price: 45.75, city: "Seattle" },
+              { value: "98175", price: 30, city: "Seattle" },
+              { value: "98177", price: 39.75, city: "Seattle" },
+              { value: "98178", price: 52.75, city: "Seattle" },
+              { value: "98181", price: 30.25, city: "Seattle" },
+              { value: "98185", price: 29, city: "Seattle" },
+              { value: "98190", price: 30, city: "Seattle" },
+              { value: "98191", price: 28.75, city: "Seattle" },
+              { value: "98194", price: 30, city: "Seattle" },
+              { value: "98195", price: 29.5, city: "Seattle" },
+              { value: "98199", price: 0, city: "Seattle" }
             ],
             label: "What is your ZIP code?",
             required: true,
             valid: false,
             minChars: 5,
-            max: 99999,
+            maxLength: 5,
             invalidMessage:
               "I am sorry but we do not service this zip code at this time.",
             changes: [
               { name: "zipCode", value: "value" },
-              { name: "zipPrice", value: "price" }
+              { name: "zipPrice", value: "price" },
+              { name: "city", value: "city" }
             ]
           },
           {
             type: "number",
             value: 600,
             min: 1,
-            max: 9999,
+            max: 5000,
+            maxLength: 4,
             label:
               "What is the approximate interior square footage of your home?",
             required: true,
@@ -198,8 +200,14 @@ class WizardProvider extends React.Component {
           },
           {
             type: "radio",
-            value: "apartment",
+            value: "invalid",
             values: [
+              {
+                value: "invalid",
+                price: 0,
+                label: "Invalid",
+                hidden: true
+              },
               {
                 value: "apartment",
                 price: 20,
@@ -218,7 +226,7 @@ class WizardProvider extends React.Component {
             ],
             label: "Building Type",
             required: true,
-            valid: true,
+            valid: false,
             changes: [
               { name: "buildingType", value: "value" },
               { name: "buildingPrice", value: "price" } //means that we change this global value by price instead of the default value
@@ -253,7 +261,7 @@ class WizardProvider extends React.Component {
             value: 0,
             byGlobal: true,
             priceModified: ["squareFoot"],
-            minCharge: 120,
+            minCharge: 180,
             selected: false,
             changes: [{ name: "totalPrice", value: "value" }]
           },
@@ -313,7 +321,14 @@ class WizardProvider extends React.Component {
             relatedTo: [
               {
                 name: "squareFoot",
-                action: "lessThanOrEqualTo"
+                action: "lessThanOrEqualTo",
+                maxLength: true
+              }
+            ],
+            onChange: [
+              {
+                func: "revalidateQuantityProduct",
+                by: 2
               }
             ]
           },
@@ -323,7 +338,19 @@ class WizardProvider extends React.Component {
             description:
               "This service includes the cleaning of both fabric and leather furniture using appropriate techniques and cleaning solutions.",
             price: 45.0,
-            minCharge: 90,
+            minCharge: {
+              conditional: true,
+              values: [
+                {
+                  component: 1,
+                  value: "gt0", //greater than 0
+                  minCharge: 120
+                },
+                {
+                  default: 0
+                }
+              ]
+            },
             value: 0,
             byGlobal: false,
             priceModified: [],
@@ -413,6 +440,10 @@ class WizardProvider extends React.Component {
             label: "Email",
             required: true,
             valid: false,
+            validates: {
+              name: "emailVerify",
+              is: "equal"
+            },
             changes: [{ name: "email", value: "value" }]
           },
           {
@@ -426,7 +457,15 @@ class WizardProvider extends React.Component {
               name: "email",
               is: "equal"
             },
-            changes: [{ name: "emailVerify", value: "value" }]
+            changes: [{ name: "emailVerify", value: "value" }],
+            onChange: [
+              {
+                func: "revalidateComponent",
+                by: 6
+              }
+            ],
+            invalidMessage: "Email addresses must match",
+            invalidMessageCondition: "@"
           },
           {
             type: "text",
@@ -490,7 +529,10 @@ class WizardProvider extends React.Component {
     if (currentStep >= this.state.steps.length) {
       currentStep = this.state.steps.length - 1;
     }
-    this.setState({ currentStep: currentStep });
+    this.setState({ currentStep: currentStep }, () => {
+      const view = document.getElementById("step");
+      view.scrollTop = 0;
+    });
   };
   decrementStep = () => {
     let currentStep = this.state.currentStep;
@@ -498,7 +540,10 @@ class WizardProvider extends React.Component {
     if (currentStep < 0) {
       currentStep = 0;
     }
-    this.setState({ currentStep: currentStep });
+    this.setState({ currentStep: currentStep }, () => {
+      const view = document.getElementById("step");
+      view.scrollTop = 0;
+    });
   };
   isStepValid = currentStep => {
     const { steps } = this.state;
@@ -538,10 +583,16 @@ class WizardProvider extends React.Component {
         }
       }
       if (valid) {
-        this.setState({ currentStep: stepNumber });
+        this.setState({ currentStep: stepNumber }, () => {
+          const view = document.getElementById("step");
+          view.scrollTop = 0;
+        });
       }
     } else {
-      this.setState({ currentStep: stepNumber });
+      this.setState({ currentStep: stepNumber }, () => {
+        const view = document.getElementById("step");
+        view.scrollTop = 0;
+      });
     }
   };
   isComponentVisible = component => {
@@ -590,6 +641,15 @@ class WizardProvider extends React.Component {
     //modify component value
     let componentToModify = stepToModify.components[componentToModifyIndex];
 
+    //if we have a max length then cut off after the max char limit
+    //this goes first else we get annoying user experience with 6000 => 999
+    if (
+      componentToModify.maxLength &&
+      val.length > componentToModify.maxLength
+    ) {
+      val = val.substring(0, componentToModify.maxLength);
+    }
+
     //check if we are a number and if we are that we dont have a min/max value we can be
     if (componentToModify.type === "number") {
       //safari fails at type=number inputs only allowing numbers
@@ -600,15 +660,6 @@ class WizardProvider extends React.Component {
       if (componentToModify.max && val > componentToModify.max) {
         val = componentToModify.max;
       }
-    }
-
-    //if we have a max length then cut off after the max char limit
-    if (
-      componentToModify.type !== "number" &&
-      componentToModify.maxLength &&
-      val.length > componentToModify.maxLength
-    ) {
-      val = val.substring(0, componentToModify.maxLength);
     }
 
     //if we have a regex then regex value before applying
@@ -723,6 +774,14 @@ class WizardProvider extends React.Component {
           this[g.func](globals[globalToModifyIndex], i);
         });
       }
+
+      if (componentToModify.valid && componentToModify.onChange) {
+        componentToModify.onChange.forEach(oc => {
+          if (oc.func === "revalidateComponent") {
+            this[oc.func](stepToModify.components[oc.by]);
+          }
+        });
+      }
     });
 
     this.setState({ globals: globals, steps: steps });
@@ -735,6 +794,15 @@ class WizardProvider extends React.Component {
         component.value.toString().length >= component.minChars
       ) {
         show = true;
+      }
+
+      if (
+        component.invalidMessageCondition &&
+        component.invalidMessageCondition === "@"
+      ) {
+        if (component.value.indexOf("@") > -1) {
+          show = true;
+        }
       }
     }
 
@@ -797,8 +865,31 @@ class WizardProvider extends React.Component {
             }
             //make sure we are at least our min price
             if (c.minCharge) {
-              if (price < c.minCharge) {
-                price = c.minCharge;
+              if (!c.minCharge.conditional) {
+                if (price < c.minCharge) {
+                  price = c.minCharge;
+                }
+              } else {
+                let minChargeSet = false;
+                c.minCharge.values.forEach(mc => {
+                  if (mc.default && !minChargeSet) {
+                    //if we have set our min charge based on something else then we dont set our default
+                    if (price < mc.default) {
+                      price = mc.default;
+                    }
+                  } else {
+                    var componentToCheck =
+                      stepToModify.components[mc.component];
+                    if (mc.value === "gt0") {
+                      if (componentToCheck.value === 0) {
+                        if (price < mc.minCharge) {
+                          price = mc.minCharge;
+                          minChargeSet = true;
+                        }
+                      }
+                    }
+                  }
+                });
               }
             }
             c.value = price;
@@ -845,16 +936,21 @@ class WizardProvider extends React.Component {
     );
     let productToToggle = stepToModify.components[productToSelectIndex];
 
-    //safari fails at type=number inputs only allowing numbers
-    value = value.replace(/[^0-9]/gi, "");
+    debugger;
+    //check if our first value is 0, if so take it out of our new value
+    if (
+      productToToggle.otherQuantity == 0 &&
+      value.toString().indexOf("0") > -1
+    ) {
+      value = value.toString().replace("0", "");
+    }
 
-    //check if we are a number and if we are that we dont have a min/max value we can be
-    if (productToToggle.min && value < productToToggle.min) {
-      value = productToToggle.min;
-    }
-    if (productToToggle.max && value > productToToggle.max) {
-      value = productToToggle.max;
-    }
+    //make sure value is positive
+    value = value < 0 ? 0 : value;
+
+    //safari fails at type=number inputs only allowing numbers
+    value = value.toString().replace(/[^0-9]/gi, "");
+    value = parseFloat(value);
 
     //check if we are related to any external values and if so act upon them
     if (productToToggle.relatedTo) {
@@ -862,7 +958,23 @@ class WizardProvider extends React.Component {
         const globalToReferenceIndex = globals.findIndex(
           g => g.name === r.name
         );
-        const globalValue = globals[globalToReferenceIndex].value;
+        let globalValue = globals[globalToReferenceIndex].value;
+        globalValue = parseFloat(globalValue);
+
+        if (r.maxLength) {
+          const length = globalValue.toString().length;
+          if (value.toString().length > length) {
+            value = parseFloat(value.toString().substring(0, length));
+          }
+        }
+
+        //check if we are a number and if we are that we dont have a min/max value we can be
+        if (productToToggle.min && value < productToToggle.min) {
+          value = productToToggle.min;
+        }
+        if (productToToggle.max && value > productToToggle.max) {
+          value = productToToggle.max;
+        }
 
         switch (r.action) {
           case "lessThanOrEqualTo":
@@ -888,6 +1000,14 @@ class WizardProvider extends React.Component {
           default:
         }
       });
+    } else {
+      //check if we are a number and if we are that we dont have a min/max value we can be
+      if (productToToggle.min && value < productToToggle.min) {
+        value = productToToggle.min;
+      }
+      if (productToToggle.max && value > productToToggle.max) {
+        value = productToToggle.max;
+      }
     }
 
     //loop through each component in the step, find our component, then calculate the price
@@ -896,11 +1016,33 @@ class WizardProvider extends React.Component {
         let price = 0;
         if (value > -1) {
           //find out our price
-          c.otherQuantity = value;
+          c.otherQuantity = value.toString();
           price = c.otherQuantity * c.price;
-          if (c.minCharge) {
-            if (price < c.minCharge) {
-              price = c.minCharge;
+          if (c.minCharge && value > 0) {
+            if (!c.minCharge.conditional) {
+              if (price < c.minCharge) {
+                price = c.minCharge;
+              }
+            } else {
+              let minChargeSet = false;
+              c.minCharge.values.forEach(mc => {
+                if (mc.default && !minChargeSet) {
+                  //if we have set our min charge based on something else then we dont set our default
+                  if (price < mc.default) {
+                    price = mc.default;
+                  }
+                } else {
+                  var componentToCheck = stepToModify.components[mc.component];
+                  if (mc.value === "gt0") {
+                    if (componentToCheck.value === 0) {
+                      if (price < mc.minCharge) {
+                        price = mc.minCharge;
+                        minChargeSet = true;
+                      }
+                    }
+                  }
+                }
+              });
             }
           }
         }
@@ -915,6 +1057,12 @@ class WizardProvider extends React.Component {
         });
 
         c.value = price;
+
+        if (c.onChange) {
+          c.onChange.forEach(oc => {
+            this[oc.func](stepToModify.components[oc.by]);
+          });
+        }
       }
     });
 
@@ -946,6 +1094,12 @@ class WizardProvider extends React.Component {
     let val = this.state.globals.find(g => g.name === "totalPrice").value;
     return val;
   };
+  revalidateComponent(component) {
+    this.updateComponentValue(component, component.value);
+  }
+  revalidateQuantityProduct(component) {
+    this.toggleQuantityProduct(component, component.otherQuantity);
+  }
   submit = () => {
     this.setState({ submitted: true });
     const { globals, steps, url } = this.state;
@@ -1003,9 +1157,9 @@ class WizardProvider extends React.Component {
         }}
       >
         {this.props.children}
-        {/* <div style={{ marginTop: "25px" }}>
+        <div style={{ marginTop: "25px" }}>
           {this.state.globals.find(g => g.name === "totalPrice").value}
-        </div> */}
+        </div>
       </WizardContext.Provider>
     );
   }
