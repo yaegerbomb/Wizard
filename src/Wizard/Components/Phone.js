@@ -28,7 +28,7 @@ export const Phone = ({ component }) => (
             disabled={component.disabled}
           />
           {showComponentInvalidMessage(component) && (
-            <div class="invalid">{component.invalidMessage} </div>
+            <div className="invalid">{component.invalidMessage} </div>
           )}
         </div>
       );
