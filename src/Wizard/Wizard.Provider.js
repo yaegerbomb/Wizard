@@ -652,6 +652,24 @@ class WizardProvider extends React.Component {
         }, 5000);
       });
   };
+
+  updateAppProductState = (product, productChanges) => {
+    let { steps, currentStep } = this.state;
+    let stepToModify = steps[currentStep];
+    let productToSelectIndex = stepToModify.components.findIndex(
+      c => c === product
+    );
+    let productToModify = stepToModify.components[productToSelectIndex];
+    productToModify = productChanges;
+    stepToModify.components[productToSelectIndex] = productToModify;
+
+    steps[currentStep] = stepToModify;
+
+    this.setState({ steps: steps });
+  };
+
+  updateAppComponentState = (component, componentChanges) => {};
+
   render() {
     return (
       <WizardContext.Provider
@@ -673,10 +691,12 @@ class WizardProvider extends React.Component {
           toggleProduct: this.toggleProduct,
           toggleQuantityProduct: this.toggleQuantityProduct,
           getTotalPrice: this.getTotalPrice,
-          submit: this.submit
+          submit: this.submit,
+          updateAppProductState: this.updateAppProductState
         }}
       >
         {this.props.children}
+        {/* {JSON.stringify(this.state)} */}
       </WizardContext.Provider>
     );
   }

@@ -209,3 +209,53 @@
   color: red;
   margin-top: 5px;
 }
+
+#wizard .btn-edit {
+  border-style: solid;
+  padding: 5px;
+  background-color: #55b2bb;
+  border-color: #000;
+  color: #fff;
+  font-size: 10px;
+  margin-left: 10px;
+}
+
+#wizard .btn-edit.description {
+  margin-left: 0;
+  margin-bottom: 10px;
+}
+
+#wizard .btn-edit:hover {
+  background-color: #65d6e0;
+  color: #000;
+  cursor: pointer;
+}
+
+#wizard .btn-save {
+  border-style: solid;
+  padding: 5px;
+  background-color: #31ad37;
+  border-color: #000;
+  color: #fff;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+#wizard .btn-save:hover {
+  background-color: #46f84f;
+  color: #fff;
+  cursor: pointer;
+}
+
+#wizard .public-DraftEditor-content {
+  border: 1px solid #f1f1f1;
+}
+
+#wizard .full-width {
+  width: 100%;
+}
+
+#wizard .btn-bigger {
+  padding: 8px;
+  font-size: 14px;
+}
