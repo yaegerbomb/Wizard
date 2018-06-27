@@ -15,7 +15,15 @@ class Product extends React.Component {
     editLabel: false,
     editDescription: false,
     editorState: EditorState.createEmpty(),
-    editOtherValueLabel: false
+    editOtherValueLabel: false,
+    editDetails: false,
+    editPrice: 0,
+    editByGlobal: true,
+    editMinCharge: 0,
+    editOtherQuantity: 0,
+    editOtherQuantityMin: 1,
+    editShowOtherQuantity: true
+
   };
 
   componentDidMount() {
@@ -35,6 +43,15 @@ class Product extends React.Component {
         });
       }
     }
+
+    this.setState({
+      editPrice: this.props.component.price,
+      editByGlobal: this.props.component.byGlobal,
+      editMinCharge: this.props.component.minCharge,
+      editOtherValueLabel: this.props.component.otherValueLabel,
+      editOtherQuantityMin: this.props.component.otherQuantityMin,
+      editShowOtherQuantity: this.props.component.showOtherQuantity
+    })
   }
 
   componentDidUpdate() {
@@ -84,7 +101,7 @@ class Product extends React.Component {
     });
   };
 
-  onEditorStateChange: Function = editorState => {
+  onEditorStateChange = editorState => {
     this.setState({
       editorState: editorState
     });
@@ -121,7 +138,6 @@ class Product extends React.Component {
       convertToRaw(this.state.editorState.getCurrentContent())
     );
     if (newDescription) {
-      const editorState = this.state.editorState;
       callback(component, {
         ...component,
         description: newDescription
@@ -132,6 +148,33 @@ class Product extends React.Component {
       editDescription: false
     });
   };
+
+  onEditProductDetails = () => {
+    this.setState({
+      editDetails: true
+    })
+  }
+
+  updateComponentDetails = (component, callback) => {
+    const {
+      editPrice,
+      editByGlobal,
+      editMinCharge,
+      editOtherValueLabel,
+      editOtherQuantityMin,
+      editShowOtherQuantity
+    } = this.state;
+
+    callback(component, {
+      ...component,
+      price: editPrice,
+      byGlobal: editByGlobal,
+      minCharge: editMinCharge,
+      otherValueLabel: editOtherValueLabel,
+      otherQuantityMin: editOtherQuantityMin,
+      showOtherQuantity: editShowOtherQuantity
+    });
+  }
 
   render() {
     const component = this.props.component;
@@ -149,152 +192,201 @@ class Product extends React.Component {
       editLabel,
       editDescription,
       editorState,
-      editOtherValueLabel
+      editDetails,
+      editPrice,
+      editByGlobal,
+      editMinCharge,
+      editOtherValueLabel,
+      editOtherQuantityMin,
+      editShowOtherQuantity
     } = this.state;
+
+    let modalClass = "modal-window"
+    if (editDetails) {
+      modalClass += " show"
+    }
 
     return (
       <WizardContext.Consumer>
         {({ toggleProduct, toggleQuantityProduct, updateAppProductState }) => (
-          <div className={productClass}>
-            <div className="c-product-title">
-              {!editLabel && <React.Fragment>{component.label}</React.Fragment>}
-              {editLabel && (
-                <input
-                  type="text"
-                  className="c-form-input"
-                  defaultValue={component.label}
-                  onChange={e => {
-                    this.setState({
-                      label: e.target.value
-                    });
-                  }}
-                />
-              )}
-              {!editLabel && (
-                <button
-                  type="button"
-                  className="btn-edit"
-                  onClick={() => this.editLabel()}
-                >
-                  Edit Title
-                </button>
-              )}
-              {editLabel && (
-                <button
-                  type="button"
-                  className="btn-save"
-                  onClick={() =>
-                    this.updateComponentStateLabel(
-                      component,
-                      updateAppProductState
-                    )
-                  }
-                >
-                  Save Title
-                </button>
-              )}
-            </div>
-            {!editDescription && (
-              <React.Fragment>
-                <div
-                  className="c-product-description"
-                  dangerouslySetInnerHTML={{
-                    __html: component.description
-                  }}
-                />
-                <button
-                  type="button"
-                  className="btn-edit description"
-                  onClick={() => this.editDescription()}
-                >
-                  Edit Description
-                </button>
-              </React.Fragment>
-            )}
-            {editDescription && (
-              <React.Fragment>
-                <Editor
-                  editorState={editorState}
-                  onEditorStateChange={this.onEditorStateChange}
-                />
-                <button
-                  type="button"
-                  className="btn-save"
-                  onClick={() =>
-                    this.updateComponentStateDescription(
-                      component,
-                      updateAppProductState
-                    )
-                  }
-                >
-                  Save Description
-                </button>
-              </React.Fragment>
-            )}
-            {component.byGlobal && (
-              <button
-                className={productButton}
-                type="button"
-                onClick={() => toggleProduct(component)}
-              >
-                {component.selected ? "Remove" : "Add"}
-              </button>
-            )}
-            {!component.byGlobal && (
-              <div className="c-form-group contact-input">
-                <label className="c-form-label" htmlFor={id}>
-                  {!editOtherValueLabel && (
+          <React.Fragment>
+            <div className={modalClass}>
+              <div>
+                <button type="button" className="modal-close" onClick={() => { this.setState({ editDetails: false }) }}>Close</button>
+                <h1>Edit Product</h1>
+                <form>
+                  <div className="edit-group">
+                    <label>Price:</label>
+                    <input type="number" onChange={(e) => this.setState({ editPrice: e.target.value })} className="c-form-input" value={editPrice} />
+                  </div>
+                  <div className="edit-group">
+                    <label>Minimum Charge:</label>
+                    <input type="number" onChange={(e) => this.setState({ editMinCharge: e.target.value })} className="c-form-input" value={editMinCharge} />
+                  </div>
+                  <div className="edit-group">
+                    <label>By Global:</label>
+                    <input type="checkbox" onChange={(e) => this.setState({ editByGlobal: !editByGlobal })} checked={editByGlobal} />
+                  </div>
+                  {!editByGlobal && (
                     <React.Fragment>
-                      {component.otherValueLabel}
-                      <button
-                        type="button"
-                        className="btn-edit"
-                        onClick={() => this.editOtherValueLabel()}
-                      >
-                        Edit Unit Label
-                      </button>
+                      <div className="edit-group">
+                        <label>Other Quantiy Minimum Value:</label>
+                        <input type="number" onChange={(e) => this.setState({ editOtherQuantityMin: e.target.value })} className="c-form-input" value={editOtherQuantityMin} />
+                      </div>
+                      <div className="edit-group">
+                        <label>Show Other Quantity:</label>
+                        <input type="checkbox" onChange={(e) => this.setState({ editShowOtherQuantity: !editShowOtherQuantity })} checked={editShowOtherQuantity} />
+                      </div>
                     </React.Fragment>
                   )}
-                </label>
-                {editOtherValueLabel && (
-                  <React.Fragment>
-                    <input
-                      type="text"
-                      className="c-form-input"
-                      defaultValue={component.otherValueLabel}
-                      onChange={e => {
-                        this.setState({
-                          otherValueLabel: e.target.value
-                        });
-                      }}
-                    />
-                    <button
-                      type="button"
-                      className="btn-save"
-                      onClick={() =>
-                        this.updateComponentStateOtherValueLabel(
-                          component,
-                          updateAppProductState
-                        )
-                      }
-                    >
-                      Save Unit Label
-                    </button>
-                  </React.Fragment>
-                )}
-                <input
-                  id={id}
-                  className="c-form-input"
-                  name={`product-${component.label}`}
-                  type="number"
-                  value={component.otherQuantity}
-                  onChange={e =>
-                    toggleQuantityProduct(component, e.target.value)
-                  }
-                />
+                  <button type="button" onClick={() => { this.setState({ editDetails: false }) }} className="btn btn-cancel">Cancel</button>
+                  <button type="button" onClick={() => this.updateComponentDetails(component, updateAppProductState)} className="btn btn-save">Save Changes</button>
+                </form>
               </div>
-            )}
-          </div>
+            </div>
+
+            <div className={productClass}>
+              <button onClick={() => this.onEditProductDetails()} type="button" className="btn btn-edit right">Edit Product Details</button>
+              <div className="c-product-title">
+                {!editLabel && <React.Fragment>{component.label}</React.Fragment>}
+                {editLabel && (
+                  <input
+                    type="text"
+                    className="c-form-input"
+                    defaultValue={component.label}
+                    onChange={e => {
+                      this.setState({
+                        label: e.target.value
+                      });
+                    }}
+                  />
+                )}
+                {!editLabel && (
+                  <button
+                    type="button"
+                    className="btn-edit"
+                    onClick={() => this.editLabel()}
+                  >
+                    Edit Title
+                </button>
+                )}
+                {editLabel && (
+                  <button
+                    type="button"
+                    className="btn-save"
+                    onClick={() =>
+                      this.updateComponentStateLabel(
+                        component,
+                        updateAppProductState
+                      )
+                    }
+                  >
+                    Save Title
+                </button>
+                )}
+              </div>
+              {!editDescription && (
+                <React.Fragment>
+                  <div
+                    className="c-product-description"
+                    dangerouslySetInnerHTML={{
+                      __html: component.description
+                    }}
+                  />
+                  <button
+                    type="button"
+                    className="btn-edit description"
+                    onClick={() => this.editDescription()}
+                  >
+                    Edit Description
+                </button>
+                </React.Fragment>
+              )}
+              {editDescription && (
+                <React.Fragment>
+                  <Editor
+                    editorState={editorState}
+                    onEditorStateChange={this.onEditorStateChange}
+                  />
+                  <button
+                    type="button"
+                    className="btn-save"
+                    onClick={() =>
+                      this.updateComponentStateDescription(
+                        component,
+                        updateAppProductState
+                      )
+                    }
+                  >
+                    Save Description
+                </button>
+                </React.Fragment>
+              )}
+              {component.byGlobal && (
+                <button
+                  className={productButton}
+                  type="button"
+                  onClick={() => toggleProduct(component)}
+                >
+                  {component.selected ? "Remove" : "Add"}
+                </button>
+              )}
+              {!component.byGlobal && (
+                <div className="c-form-group contact-input">
+                  <label className="c-form-label" htmlFor={id}>
+                    {!editOtherValueLabel && (
+                      <React.Fragment>
+                        {component.otherValueLabel}
+                        <button
+                          type="button"
+                          className="btn-edit"
+                          onClick={() => this.editOtherValueLabel()}
+                        >
+                          Edit Unit Label
+                      </button>
+                      </React.Fragment>
+                    )}
+                  </label>
+                  {editOtherValueLabel && (
+                    <React.Fragment>
+                      <input
+                        type="text"
+                        className="c-form-input"
+                        defaultValue={component.otherValueLabel}
+                        onChange={e => {
+                          this.setState({
+                            otherValueLabel: e.target.value
+                          });
+                        }}
+                      />
+                      <button
+                        type="button"
+                        className="btn-save"
+                        onClick={() =>
+                          this.updateComponentStateOtherValueLabel(
+                            component,
+                            updateAppProductState
+                          )
+                        }
+                      >
+                        Save Unit Label
+                    </button>
+                    </React.Fragment>
+                  )}
+                  <input
+                    id={id}
+                    className="c-form-input"
+                    name={`product-${component.label}`}
+                    type="number"
+                    value={component.otherQuantity}
+                    onChange={e =>
+                      toggleQuantityProduct(component, e.target.value)
+                    }
+                  />
+                </div>
+              )}
+            </div>
+          </React.Fragment>
         )}
       </WizardContext.Consumer>
     );

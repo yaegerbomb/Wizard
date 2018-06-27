@@ -28,7 +28,6 @@ class TOS extends React.Component {
       convertToRaw(this.state.editorState.getCurrentContent())
     );
     if (newText) {
-      const editorState = this.state.editorState;
       callback(component, {
         ...component,
         text: newText
@@ -46,7 +45,7 @@ class TOS extends React.Component {
     });
   };
 
-  onEditorStateChange: Function = editorState => {
+  onEditorStateChange = editorState => {
     this.setState({
       editorState: editorState
     });
@@ -81,64 +80,64 @@ class TOS extends React.Component {
           updateComponentValue,
           updateAppProductState
         }) => (
-          <div>
-            {!editText && (
-              <React.Fragment>
-                <div style={tosBox}>
-                  <div dangerouslySetInnerHTML={{ __html: component.text }} />
-                </div>
-                <button
-                  type="button"
-                  className="btn-edit description"
-                  onClick={() => this.editTOS()}
-                >
-                  Edit Description
+            <div>
+              {!editText && (
+                <React.Fragment>
+                  <div style={tosBox}>
+                    <div dangerouslySetInnerHTML={{ __html: component.text }} />
+                  </div>
+                  <button
+                    type="button"
+                    className="btn-edit description"
+                    onClick={() => this.editTOS()}
+                  >
+                    Edit Description
                 </button>
-              </React.Fragment>
-            )}
-            {editText && (
-              <React.Fragment>
-                <div style={tosBox}>
-                  <Editor
-                    editorState={editorState}
-                    onEditorStateChange={this.onEditorStateChange}
-                  />
-                </div>
-                <button
-                  type="button"
-                  className="btn-save"
-                  onClick={() =>
-                    this.updateComponentStateDescription(
-                      component,
-                      updateAppProductState
-                    )
-                  }
-                >
-                  Save TOS
+                </React.Fragment>
+              )}
+              {editText && (
+                <React.Fragment>
+                  <div style={tosBox}>
+                    <Editor
+                      editorState={editorState}
+                      onEditorStateChange={this.onEditorStateChange}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    className="btn-save"
+                    onClick={() =>
+                      this.updateComponentStateDescription(
+                        component,
+                        updateAppProductState
+                      )
+                    }
+                  >
+                    Save TOS
                 </button>
-              </React.Fragment>
-            )}
-            <div
-              className={
-                getComponentValue(component)
-                  ? "tos-accept selected"
-                  : "tos-accept"
-              }
-            >
-              <label>
-                I Accept
+                </React.Fragment>
+              )}
+              <div
+                className={
+                  getComponentValue(component)
+                    ? "tos-accept selected"
+                    : "tos-accept"
+                }
+              >
+                <label>
+                  I Accept
                 <input
-                  name="accept"
-                  type="checkbox"
-                  checked={getComponentValue(component)}
-                  onChange={e =>
-                    updateComponentValue(component, e.target.checked)
-                  }
-                />
-              </label>
+                    name="accept"
+                    type="checkbox"
+                    checked={getComponentValue(component)}
+                    onChange={e =>
+                      updateComponentValue(component, e.target.checked)
+                    }
+                  />
+                </label>
+              </div>
             </div>
-          </div>
-        )}
+          )}
       </WizardContext.Consumer>
     );
   }

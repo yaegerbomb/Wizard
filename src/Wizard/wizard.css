@@ -241,8 +241,25 @@
   margin-top: 10px;
 }
 
+#wizard .btn-cancel {
+  border-style: solid;
+  padding: 5px;
+  background-color: #9b9b9b;
+  border-color: #000;
+  color: #fff;
+  font-size: 14px;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
 #wizard .btn-save:hover {
   background-color: #46f84f;
+  color: #fff;
+  cursor: pointer;
+}
+
+#wizard .btn-cancel:hover {
+  background-color: rgb(59, 59, 59);
   color: #fff;
   cursor: pointer;
 }
@@ -258,4 +275,72 @@
 #wizard .btn-bigger {
   padding: 8px;
   font-size: 14px;
+}
+
+#wizard .right{
+  float: right;
+}
+
+#wizard .modal-window {
+  position: fixed;
+  background-color: rgba(255, 255, 255, 0.15);
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+  display: none;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+#wizard .modal-window.show{
+  display: inline-block;
+}
+
+#wizard .modal-window>div {
+  z-index: 1000;
+  width: 50%;
+  position: relative;
+  margin: 5% auto;
+  padding: 2rem;
+  background: #fff;
+  color: #444;
+  border: 1px solid black;
+}
+
+#wizard .modal-window header {
+  font-weight: bold;
+}
+
+#wizard .modal-close {
+  color: #aaa;
+  border: 0;
+  background: none;
+  line-height: 50px;
+  font-size: 80%;
+  position: absolute;
+  right: 0;
+  text-align: center;
+  top: 0;
+  width: 70px;
+  text-decoration: none;
+}
+
+#wizard .modal-close:hover {
+  color: #000;
+  cursor: pointer;
+}
+
+#wizard .modal-window h1 {
+  font-size: 150%;
+  margin: 0 0 15px;
+}
+
+#wizard .edit-group{
+  margin-bottom: 15px;
+}
+#wizard .edit-group label{
+  margin-bottom: 10px;
 }

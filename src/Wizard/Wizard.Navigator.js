@@ -15,9 +15,7 @@ export const Navigator = () => (
                 if (s < 0) {
                   s = 0;
                 }
-                if (isStepValid(s)) {
-                  setStep(key);
-                }
+                setStep(key);
               }}
               className={
                 key === state.currentStep

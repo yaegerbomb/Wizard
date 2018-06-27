@@ -29,27 +29,7 @@ class WizardProvider extends React.Component {
     });
   };
   isStepValid = currentStep => {
-    const { steps } = this.state;
-    let currentStepToModify = steps[currentStep];
-
-    //check if all components are valid
-    let valid = true;
-
-    currentStepToModify.components.forEach((c, key) => {
-      if (c.required && !c.valid && this.isComponentVisible(c)) {
-        valid = false;
-      }
-    });
-
-    if (currentStepToModify.validType === "oneOf") {
-      let selected = currentStepToModify.components.filter(c => c.selected)
-        .length;
-      if (selected !== 1) {
-        valid = false;
-      }
-    }
-
-    return valid;
+    return true;
   };
   isFirstStep = () => {
     return this.state.currentStep === 0;
@@ -612,45 +592,6 @@ class WizardProvider extends React.Component {
   }
   submit = () => {
     this.setState({ submitted: true });
-    const { globals, steps, url } = this.state;
-    let postData = {};
-    postData["Selected Products"] = [];
-
-    globals.forEach(g => {
-      postData[g.label] = g.value;
-    });
-
-    steps.forEach(s => {
-      s.components.forEach(c => {
-        if (c.type === "product") {
-          if (c.selected || c.value > 0) {
-            postData["Selected Products"].push(c);
-          }
-        }
-      });
-    });
-
-    fetch(url, {
-      method: "POST", // or 'PUT'
-      body: JSON.stringify(postData),
-      headers: new Headers({
-        "Content-Type": "application/json"
-      })
-    })
-      .then(res => {
-        return res.json();
-      })
-      .then(json => {
-        setTimeout(() => {
-          this.setState(WizardState());
-        }, 5000);
-      })
-      .catch(error => {
-        console.error("Error:", error);
-        setTimeout(() => {
-          this.setState(WizardState());
-        }, 5000);
-      });
   };
 
   updateAppProductState = (product, productChanges) => {
@@ -668,7 +609,23 @@ class WizardProvider extends React.Component {
     this.setState({ steps: steps });
   };
 
-  updateAppComponentState = (component, componentChanges) => {};
+  updateAppComponentState = (component, componentChanges) => { };
+
+  updateZips = (zips) => {
+    let { steps, currentStep } = this.state;
+    let stepToModify = steps[0];
+    let productToModify = stepToModify.components[1];
+    let zipValues = productToModify.values;
+
+    zipValues = zips;
+    productToModify.values = zipValues;
+    stepToModify[1] = productToModify;
+    steps[0] = stepToModify;
+    this.setState({
+      steps
+    });
+    alert("Changes saved!");
+  }
 
   render() {
     return (
@@ -692,7 +649,8 @@ class WizardProvider extends React.Component {
           toggleQuantityProduct: this.toggleQuantityProduct,
           getTotalPrice: this.getTotalPrice,
           submit: this.submit,
-          updateAppProductState: this.updateAppProductState
+          updateAppProductState: this.updateAppProductState,
+          updateZips: this.updateZips
         }}
       >
         {this.props.children}
