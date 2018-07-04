@@ -612,7 +612,7 @@ class WizardProvider extends React.Component {
   updateAppComponentState = (component, componentChanges) => { };
 
   updateZips = (zips) => {
-    let { steps, currentStep } = this.state;
+    let { steps } = this.state;
     let stepToModify = steps[0];
     let productToModify = stepToModify.components[1];
     let zipValues = productToModify.values;
@@ -625,6 +625,59 @@ class WizardProvider extends React.Component {
       steps
     });
     alert("Changes saved!");
+  }
+
+  cloneComponent = (product) => {
+    let { steps, currentStep } = this.state;
+    let stepToModify = steps[currentStep];
+    let productToSelectIndex = stepToModify.components.findIndex(
+      c => c === product
+    );
+    let productToClone = JSON.parse(JSON.stringify(stepToModify.components[productToSelectIndex]));
+
+    stepToModify.components.push(productToClone);
+
+    steps[currentStep] = stepToModify;
+
+    this.setState({ steps: steps });
+  }
+
+  moveUp = (product) => {
+    let { steps, currentStep } = this.state;
+    let stepToModify = steps[currentStep];
+    let components = stepToModify.components;
+    let productToSelectIndex = stepToModify.components.findIndex(
+      c => c === product
+    );
+    let productToMoveUp = stepToModify.components[productToSelectIndex];
+
+    if (productToSelectIndex !== 0) {
+      components[productToSelectIndex] = components.splice(productToSelectIndex - 1, 1, components[productToSelectIndex])[0];
+      stepToModify.components = components;
+      steps[currentStep] = stepToModify;
+      this.setState({ steps: steps });
+    }
+  }
+
+  moveDown = (product) => {
+    let { steps, currentStep } = this.state;
+    let stepToModify = steps[currentStep];
+    let components = stepToModify.components;
+    let productToSelectIndex = stepToModify.components.findIndex(
+      c => c === product
+    );
+    let productToMoveUp = stepToModify.components[productToSelectIndex];
+
+    if (productToSelectIndex !== (components.length - 1)) {
+      components[productToSelectIndex] = components.splice(productToSelectIndex + 1, 1, components[productToSelectIndex])[0];
+      stepToModify.components = components;
+      steps[currentStep] = stepToModify;
+      this.setState({ steps: steps });
+    }
+  }
+
+  saveNewState = () => {
+
   }
 
   render() {
@@ -650,7 +703,10 @@ class WizardProvider extends React.Component {
           getTotalPrice: this.getTotalPrice,
           submit: this.submit,
           updateAppProductState: this.updateAppProductState,
-          updateZips: this.updateZips
+          updateZips: this.updateZips,
+          cloneComponent: this.cloneComponent,
+          moveUp: this.moveUp,
+          moveDown: this.moveDown
         }}
       >
         {this.props.children}

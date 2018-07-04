@@ -344,3 +344,27 @@
 #wizard .edit-group label{
   margin-bottom: 10px;
 }
+
+#wizard .table{
+  margin-left: auto;
+  margin-right: auto;
+  padding: 15px;
+}
+
+#wizard .table tr td{
+  padding: 15px;
+}
+#wizard .table tr:nth-child(even) {
+  background-color: #a3a2a29a
+}
+
+#wizard .search-container{
+  width:50%;
+  padding: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#wizard .clone-button{
+  margin: 10px 0;
+}

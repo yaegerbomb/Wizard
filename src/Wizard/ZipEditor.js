@@ -2,18 +2,40 @@ import React, { Component } from 'react';
 
 class ZipEditor extends Component {
     state = {
-        zips: []
+        zips: [],
+        filteredZips: [],
+        search: ""
     }
 
     componentDidMount() {
         if (this.props.zips) {
             this.setState({
-                zips: this.props.zips
+                zips: this.props.zips,
+                filteredZips: this.props.zips
             });
         }
     }
 
-    updateZip = (zipObj, key) => {
+    findZipKey = (zipToFind) => {
+        let key = -1;
+        const { zips } = this.state;
+        zips.forEach((zip, index) => {
+            if (zip.value === zipToFind.value) {
+                key = index;
+            }
+        });
+
+        return key;
+    }
+
+    updateZip = (zip, zipObj, filteredKey) => {
+        const key = this.findZipKey(zip);
+        let filteredZips = this.state.filteredZips;
+        filteredZips[filteredKey] = {
+            ...filteredZips[filteredKey],
+            ...zipObj
+        }
+
         let zips = this.state.zips;
         zips[key] = {
             ...zips[key],
@@ -21,7 +43,8 @@ class ZipEditor extends Component {
         };
 
         this.setState({
-            zips: zips
+            zips: zips,
+            filteredZips: filteredZips
         })
     }
 
@@ -29,12 +52,33 @@ class ZipEditor extends Component {
         this.props.updateZips(this.state.zips);
     }
 
+    filterZips = (searchString) => {
+        if (searchString) {
+            let filteredZips = this.state.filteredZips;
+            filteredZips = filteredZips.filter((zip => zip.value.indexOf(searchString) !== -1));
+            this.setState({
+                filteredZips: filteredZips,
+                search: searchString
+            })
+        } else {
+            this.setState({
+                filteredZips: this.state.zips,
+                search: ""
+            })
+        }
+    }
+
     render() {
-        const zips = this.state.zips;
+        const zips = this.state.filteredZips;
+        const search = this.state.search;
 
         return (
             <div>
-                <table>
+                <div className="search-container">
+                    <label>Search Zips: </label>
+                    <input type="text" defaultValue={search} onChange={(e) => this.filterZips(e.target.value)} />
+                </div>
+                <table className="table">
                     <thead>
                         <tr>
                             <th>Zip Code</th>
@@ -45,28 +89,25 @@ class ZipEditor extends Component {
                     </thead>
                     <tbody>
                         {
-                            zips.map((zip, key) => {
+                            zips.map((zip, filteredKey) => {
                                 return (
                                     <tr>
                                         <td>
                                             <input type="text" onChange={(e) => {
                                                 const value = e.target.value;
-                                                zip.value = value;
-                                                this.updateZip({ value: value }, key)
+                                                this.updateZip(zip, { value: value }, filteredKey)
                                             }} value={zip.value} />
                                         </td>
                                         <td>
                                             <input type="number" onChange={(e) => {
                                                 const price = e.target.value;
-                                                zip.price = price;
-                                                this.updateZip({ price: price }, key)
+                                                this.updateZip(zip, { price: price }, filteredKey)
                                             }} value={zip.price} />
                                         </td>
                                         <td>
                                             <input type="text" onChange={(e) => {
                                                 const city = e.target.value;
-                                                zip.city = city;
-                                                this.updateZip({ city, city }, key)
+                                                this.updateZip(zip, { city: city }, filteredKey)
                                             }} value={zip.city} />
                                         </td>
                                     </tr>
