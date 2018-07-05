@@ -5,7 +5,37 @@ import { WizardState } from "./Utils";
 export const WizardContext = React.createContext();
 
 class WizardProvider extends React.Component {
-  state = WizardState();
+  state = {
+    loading: true,
+  }
+
+  componentDidMount() {
+    this.getData();
+  }
+
+  getData = () => {
+    this.setState({
+      loading: true
+    }, () => {
+      fetch('/choreology/wp-json/wizard/v1/api/config')
+        .then((resp) => resp.json())
+        .then((data) => {
+          this.setState({
+            ...data,
+            loading: false
+          });
+        }).catch((error) => {
+          console.log(error);
+        });
+    });
+  }
+
+  resetData = () => {
+    this.setState({
+      state: WizardState()
+    })
+  }
+
   incrementStep = () => {
     let currentStep = this.state.currentStep;
     currentStep++;
@@ -591,7 +621,7 @@ class WizardProvider extends React.Component {
     this.toggleQuantityProduct(component, component.otherQuantity);
   }
   submit = () => {
-    this.setState({ submitted: true });
+    //this.setState({ submitted: true });
   };
 
   updateAppProductState = (product, productChanges) => {
@@ -649,7 +679,6 @@ class WizardProvider extends React.Component {
     let productToSelectIndex = stepToModify.components.findIndex(
       c => c === product
     );
-    let productToMoveUp = stepToModify.components[productToSelectIndex];
 
     if (productToSelectIndex !== 0) {
       components[productToSelectIndex] = components.splice(productToSelectIndex - 1, 1, components[productToSelectIndex])[0];
@@ -666,7 +695,6 @@ class WizardProvider extends React.Component {
     let productToSelectIndex = stepToModify.components.findIndex(
       c => c === product
     );
-    let productToMoveUp = stepToModify.components[productToSelectIndex];
 
     if (productToSelectIndex !== (components.length - 1)) {
       components[productToSelectIndex] = components.splice(productToSelectIndex + 1, 1, components[productToSelectIndex])[0];
@@ -677,41 +705,74 @@ class WizardProvider extends React.Component {
   }
 
   saveNewState = () => {
-
+    this.resetProducts();
+    let isSure = window.confirm("Are you sure you want to update the wizard? This cannot be undone!");
+    if (isSure) {
+      let url = `/choreology/wp-json/wizard/v1/api/config?_wpnonce=${window.nonce}`;
+      fetch(url, {
+        method: "POST", // or 'PUT'
+        body: JSON.stringify({
+          "data": {
+            ...this.state,
+            currentStep: 0,
+            submitted: false
+          }
+        }),
+        headers: new Headers({
+          "Content-Type": "application/json"
+        })
+      })
+        .then(res => {
+          return res.json();
+        })
+        .then(json => {
+          this.getData();
+          alert("Changes saved successfully");
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          alert("Error with saving");
+        });
+    }
   }
 
   render() {
     return (
-      <WizardContext.Provider
-        value={{
-          originalState: this.state,
-          state: this.state,
-          incrementStep: this.incrementStep,
-          decrementStep: this.decrementStep,
-          isStepValid: this.isStepValid,
-          isFirstStep: this.isFirstStep,
-          isLastStep: this.isLastStep,
-          setStep: this.setStep,
-          isComponentVisible: this.isComponentVisible,
-          updateComponentValue: this.updateComponentValue,
-          showComponentInvalidMessage: this.showComponentInvalidMessage,
-          getComponentValue: this.getComponentValue,
-          resetProducts: this.resetProducts,
-          updateGlobal: this.updateGlobal,
-          toggleProduct: this.toggleProduct,
-          toggleQuantityProduct: this.toggleQuantityProduct,
-          getTotalPrice: this.getTotalPrice,
-          submit: this.submit,
-          updateAppProductState: this.updateAppProductState,
-          updateZips: this.updateZips,
-          cloneComponent: this.cloneComponent,
-          moveUp: this.moveUp,
-          moveDown: this.moveDown
-        }}
-      >
-        {this.props.children}
-        {/* {JSON.stringify(this.state)} */}
-      </WizardContext.Provider>
+      <React.Fragment>
+        {!this.state.loading &&
+          <WizardContext.Provider
+            value={{
+              originalState: this.state,
+              state: this.state,
+              incrementStep: this.incrementStep,
+              decrementStep: this.decrementStep,
+              isStepValid: this.isStepValid,
+              isFirstStep: this.isFirstStep,
+              isLastStep: this.isLastStep,
+              setStep: this.setStep,
+              isComponentVisible: this.isComponentVisible,
+              updateComponentValue: this.updateComponentValue,
+              showComponentInvalidMessage: this.showComponentInvalidMessage,
+              getComponentValue: this.getComponentValue,
+              resetProducts: this.resetProducts,
+              updateGlobal: this.updateGlobal,
+              toggleProduct: this.toggleProduct,
+              toggleQuantityProduct: this.toggleQuantityProduct,
+              getTotalPrice: this.getTotalPrice,
+              submit: this.submit,
+              updateAppProductState: this.updateAppProductState,
+              updateZips: this.updateZips,
+              cloneComponent: this.cloneComponent,
+              moveUp: this.moveUp,
+              moveDown: this.moveDown,
+              saveNewState: this.saveNewState
+            }}
+          >
+            {this.props.children}
+            {/* {JSON.stringify(this.state)} */}
+          </WizardContext.Provider>
+        }
+      </React.Fragment>
     );
   }
 }

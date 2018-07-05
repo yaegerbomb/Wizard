@@ -116,7 +116,6 @@
 #wizard .button-steps {
   display: block;
   text-align: right;
-  height: 100%;
   padding: 10px 15px;
   background-color: #ffffff;
 }
@@ -129,6 +128,7 @@
   background-color: #0e0e0e;
   border-color: #0e0e0e;
   color: #ffffff;
+  min-height: 40px;
 }
 #wizard .button-add {
   width: 100%;
