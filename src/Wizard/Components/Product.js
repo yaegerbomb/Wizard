@@ -208,7 +208,7 @@ class Product extends React.Component {
 
     return (
       <WizardContext.Consumer>
-        {({ toggleProduct, toggleQuantityProduct, updateAppProductState, cloneComponent, moveUp, moveDown }) => (
+        {({ toggleProduct, toggleQuantityProduct, updateAppProductState, cloneComponent, moveUp, moveDown, removeProduct }) => (
           <React.Fragment>
             <div className={modalClass}>
               <div>
@@ -407,6 +407,13 @@ class Product extends React.Component {
               >
                 Clone
                 </button>
+              <button
+                type="button"
+                className="btn-reset btn-tiny"
+                onClick={() => removeProduct(component)}
+              >
+                Remove
+              </button>
             </div>
           </React.Fragment>
         )}

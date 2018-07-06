@@ -14,26 +14,37 @@ class WizardProvider extends React.Component {
   }
 
   getData = () => {
-    this.setState({
-      loading: true
-    }, () => {
-      fetch('/choreology/wp-json/wizard/v1/api/config')
-        .then((resp) => resp.json())
-        .then((data) => {
-          this.setState({
-            ...data,
-            loading: false
+    if (window.location.href.indexOf("localhost") !== -1) {
+      this.setState({
+        ...WizardState(),
+        loading: false
+      });
+    } else {
+      this.setState({
+        loading: true
+      }, () => {
+        fetch('/wp-json/wizard/v1/api/config')
+          .then((resp) => resp.json())
+          .then((data) => {
+            this.setState({
+              ...data,
+              loading: false
+            });
+          }).catch((error) => {
+            console.log(error);
           });
-        }).catch((error) => {
-          console.log(error);
-        });
-    });
+      });
+
+    }
   }
 
   resetData = () => {
-    this.setState({
-      state: WizardState()
-    })
+    let isSure = window.confirm("Are you sure you want to reset the wizard? You will still need to save all changes for it to take effect!");
+    if (isSure) {
+      this.setState({
+        ...WizardState()
+      })
+    }
   }
 
   incrementStep = () => {
@@ -704,11 +715,29 @@ class WizardProvider extends React.Component {
     }
   }
 
+  removeProduct = (product) => {
+    let isSure = window.confirm("Are you sure you want to remove?");
+    if (isSure) {
+      let { steps, currentStep } = this.state;
+      let stepToModify = steps[currentStep];
+      let components = stepToModify.components;
+
+      let productToRemove = stepToModify.components.findIndex(
+        c => c === product
+      );
+
+      components.splice(productToRemove, 1);
+      stepToModify.components = components;
+      steps[currentStep] = stepToModify;
+      this.setState({ steps: steps });
+    }
+  }
+
   saveNewState = () => {
     this.resetProducts();
     let isSure = window.confirm("Are you sure you want to update the wizard? This cannot be undone!");
     if (isSure) {
-      let url = `/choreology/wp-json/wizard/v1/api/config?_wpnonce=${window.nonce}`;
+      let url = `/wp-json/wizard/v1/api/config/?update-config=${window.nonce}`;
       fetch(url, {
         method: "POST", // or 'PUT'
         body: JSON.stringify({
@@ -765,7 +794,9 @@ class WizardProvider extends React.Component {
               cloneComponent: this.cloneComponent,
               moveUp: this.moveUp,
               moveDown: this.moveDown,
-              saveNewState: this.saveNewState
+              saveNewState: this.saveNewState,
+              resetData: this.resetData,
+              removeProduct: this.removeProduct
             }}
           >
             {this.props.children}

@@ -16,7 +16,7 @@ class Wizard extends React.Component {
   render() {
     return (
       <WizardContext.Consumer>
-        {({ state, updateZips, saveNewState }) => (
+        {({ state, updateZips, saveNewState, resetData }) => (
           <React.Fragment>
             {this.state.editZips && (
               <div id="wizard">
@@ -38,6 +38,7 @@ class Wizard extends React.Component {
                 <button type="button" className="btn-save" onClick={() => this.setState({ editZips: true })}> Edit Zips</button>
                 <div>
                   <button type="button" className="btn-save full-width" onClick={() => saveNewState()}>Save All Changes</button>
+                  <button type="button" className="btn-reset full-width" onClick={() => resetData()}>Reset Data</button>
                 </div>
               </div>
             }

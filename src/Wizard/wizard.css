@@ -241,6 +241,20 @@
   margin-top: 10px;
 }
 
+#wizard .btn-reset {
+  border-style: solid;
+  padding: 5px;
+  background-color: #ad3156;
+  border-color: #000;
+  color: #fff;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+#wizard .btn-tiny{
+  font-size: 10px !important;
+}
+
 #wizard .btn-cancel {
   border-style: solid;
   padding: 5px;
@@ -254,6 +268,12 @@
 
 #wizard .btn-save:hover {
   background-color: #46f84f;
+  color: #fff;
+  cursor: pointer;
+}
+
+#wizard .btn-reset:hover {
+  background-color: #ce436c;
   color: #fff;
   cursor: pointer;
 }
@@ -366,5 +386,5 @@
 }
 
 #wizard .clone-button{
-  margin: 10px 0;
+  margin: 10px 5px 0 0;
 }
