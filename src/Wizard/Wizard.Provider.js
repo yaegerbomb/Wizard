@@ -5,7 +5,28 @@ import { WizardState } from "./Utils";
 export const WizardContext = React.createContext();
 
 class WizardProvider extends React.Component {
-  state = WizardState();
+  state = {
+    loading: true,
+  }
+  componentDidMount() {
+    this.getData();
+  }
+  getData = () => {
+    this.setState({
+      loading: true
+    }, () => {
+      fetch('/wp-json/wizard/v1/api/config')
+        .then((resp) => resp.json())
+        .then((data) => {
+          this.setState({
+            ...data,
+            loading: false
+          });
+        }).catch((error) => {
+          console.log(error);
+        });
+    });
+  }
   incrementStep = () => {
     let currentStep = this.state.currentStep;
     currentStep++;
@@ -309,6 +330,8 @@ class WizardProvider extends React.Component {
               show = true;
             }
             break;
+          default:
+            break;
         }
       }
     }
@@ -374,7 +397,7 @@ class WizardProvider extends React.Component {
             if (c.minCharge) {
               if (!c.minCharge.conditional) {
                 if (price < c.minCharge) {
-                  price = c.minCharge;
+                  price = parseFloat(c.minCharge);
                 }
               } else {
                 let minChargeSet = false;
@@ -382,7 +405,7 @@ class WizardProvider extends React.Component {
                   if (mc.default && !minChargeSet) {
                     //if we have set our min charge based on something else then we dont set our default
                     if (price < mc.default) {
-                      price = mc.default;
+                      price = parseFloat(mc.default);
                     }
                   } else {
                     var componentToCheck =
@@ -390,7 +413,7 @@ class WizardProvider extends React.Component {
                     if (mc.value === "gt0") {
                       if (componentToCheck.value === 0) {
                         if (price < mc.minCharge) {
-                          price = mc.minCharge;
+                          price = parseFloat(mc.minCharge);
                           minChargeSet = true;
                         }
                       }
@@ -399,13 +422,13 @@ class WizardProvider extends React.Component {
                 });
               }
             }
-            c.value = price;
+            c.value = parseFloat(price);
             let globalToModifyIndex = globals.findIndex(
               g => g.name === ch.name
             );
             globals[globalToModifyIndex].previousValue =
               globals[globalToModifyIndex].value;
-            globals[globalToModifyIndex].value += price;
+            globals[globalToModifyIndex].value += parseFloat(price);
           });
         } else {
           c.changes.forEach(ch => {
@@ -414,7 +437,7 @@ class WizardProvider extends React.Component {
             );
             globals[globalToModifyIndex].previousValue =
               globals[globalToModifyIndex].value;
-            globals[globalToModifyIndex].value -= c.value;
+            globals[globalToModifyIndex].value -= parseFloat(c.value);
             c.value = 0;
           });
         }
@@ -425,7 +448,7 @@ class WizardProvider extends React.Component {
         c.selected = false;
         c.changes.forEach(ch => {
           let globalToModifyIndex = globals.findIndex(g => g.name === ch.name);
-          globals[globalToModifyIndex].value -= c.value;
+          globals[globalToModifyIndex].value -= parseFloat(c.value);
           c.value = 0;
         });
       }
@@ -513,10 +536,10 @@ class WizardProvider extends React.Component {
     } else {
       //check if we are a number and if we are that we dont have a min/max value we can be
       if (productToToggle.min && value < productToToggle.min) {
-        value = productToToggle.min;
+        value = parseFloat(productToToggle.min);
       }
       if (productToToggle.max && value > productToToggle.max) {
-        value = productToToggle.max;
+        value = parseFloat(productToToggle.max);
       }
     }
 
@@ -531,7 +554,7 @@ class WizardProvider extends React.Component {
           if (c.minCharge && value > 0) {
             if (!c.minCharge.conditional) {
               if (price < c.minCharge) {
-                price = c.minCharge;
+                price = parseFloat(c.minCharge);
               }
             } else {
               let minChargeSet = false;
@@ -539,14 +562,14 @@ class WizardProvider extends React.Component {
                 if (mc.default && !minChargeSet) {
                   //if we have set our min charge based on something else then we dont set our default
                   if (price < mc.default) {
-                    price = mc.default;
+                    price = parseFloat(mc.default);
                   }
                 } else {
                   var componentToCheck = stepToModify.components[mc.component];
                   if (mc.value === "gt0") {
                     if (componentToCheck.value === 0) {
                       if (price < mc.minCharge) {
-                        price = mc.minCharge;
+                        price = parseFloat(mc.minCharge);
                         minChargeSet = true;
                       }
                     }
@@ -562,8 +585,8 @@ class WizardProvider extends React.Component {
           let globalToModifyIndex = globals.findIndex(g => g.name === ch.name);
           globals[globalToModifyIndex].previousValue =
             globals[globalToModifyIndex].value;
-          globals[globalToModifyIndex].value -= c.value;
-          globals[globalToModifyIndex].value += price;
+          globals[globalToModifyIndex].value -= parseFloat(c.value);
+          globals[globalToModifyIndex].value += parseFloat(price);
         });
 
         c.value = price;
@@ -602,7 +625,7 @@ class WizardProvider extends React.Component {
   };
   getTotalPrice = () => {
     let val = this.state.globals.find(g => g.name === "totalPrice").value;
-    return val;
+    return parseFloat(val);
   };
   revalidateComponent(component) {
     this.updateComponentValue(component, component.value);
@@ -654,30 +677,35 @@ class WizardProvider extends React.Component {
   };
   render() {
     return (
-      <WizardContext.Provider
-        value={{
-          originalState: this.state,
-          state: this.state,
-          incrementStep: this.incrementStep,
-          decrementStep: this.decrementStep,
-          isStepValid: this.isStepValid,
-          isFirstStep: this.isFirstStep,
-          isLastStep: this.isLastStep,
-          setStep: this.setStep,
-          isComponentVisible: this.isComponentVisible,
-          updateComponentValue: this.updateComponentValue,
-          showComponentInvalidMessage: this.showComponentInvalidMessage,
-          getComponentValue: this.getComponentValue,
-          resetProducts: this.resetProducts,
-          updateGlobal: this.updateGlobal,
-          toggleProduct: this.toggleProduct,
-          toggleQuantityProduct: this.toggleQuantityProduct,
-          getTotalPrice: this.getTotalPrice,
-          submit: this.submit
-        }}
-      >
-        {this.props.children}
-      </WizardContext.Provider>
+      <React.Fragment>
+        {this.state.loading && <div className="loader-container"><div className="loader">Loading...</div></div>}
+        {!this.state.loading &&
+          <WizardContext.Provider
+            value={{
+              originalState: this.state,
+              state: this.state,
+              incrementStep: this.incrementStep,
+              decrementStep: this.decrementStep,
+              isStepValid: this.isStepValid,
+              isFirstStep: this.isFirstStep,
+              isLastStep: this.isLastStep,
+              setStep: this.setStep,
+              isComponentVisible: this.isComponentVisible,
+              updateComponentValue: this.updateComponentValue,
+              showComponentInvalidMessage: this.showComponentInvalidMessage,
+              getComponentValue: this.getComponentValue,
+              resetProducts: this.resetProducts,
+              updateGlobal: this.updateGlobal,
+              toggleProduct: this.toggleProduct,
+              toggleQuantityProduct: this.toggleQuantityProduct,
+              getTotalPrice: this.getTotalPrice,
+              submit: this.submit
+            }}
+          >
+            {this.props.children}
+          </WizardContext.Provider>
+        }
+      </React.Fragment>
     );
   }
 }
