@@ -22,7 +22,8 @@ class Product extends React.Component {
     editMinCharge: 0,
     editOtherQuantity: 0,
     editOtherQuantityMin: 1,
-    editShowOtherQuantity: true
+    editShowOtherQuantity: true,
+    editUnit: ""
 
   };
 
@@ -50,7 +51,8 @@ class Product extends React.Component {
       editMinCharge: this.props.component.minCharge,
       editOtherValueLabel: this.props.component.otherValueLabel,
       editOtherQuantityMin: this.props.component.otherQuantityMin,
-      editShowOtherQuantity: this.props.component.showOtherQuantity
+      editShowOtherQuantity: this.props.component.showOtherQuantity,
+      editUnit: this.props.component.unit
     })
   }
 
@@ -162,7 +164,8 @@ class Product extends React.Component {
       editMinCharge,
       editOtherValueLabel,
       editOtherQuantityMin,
-      editShowOtherQuantity
+      editShowOtherQuantity,
+      editUnit
     } = this.state;
 
     callback(component, {
@@ -172,7 +175,8 @@ class Product extends React.Component {
       minCharge: editMinCharge,
       otherValueLabel: editOtherValueLabel,
       otherQuantityMin: editOtherQuantityMin,
-      showOtherQuantity: editShowOtherQuantity
+      showOtherQuantity: editShowOtherQuantity,
+      unit: editUnit
     });
   }
 
@@ -198,7 +202,8 @@ class Product extends React.Component {
       editMinCharge,
       editOtherValueLabel,
       editOtherQuantityMin,
-      editShowOtherQuantity
+      editShowOtherQuantity,
+      editUnit
     } = this.state;
 
     let modalClass = "modal-window"
@@ -236,6 +241,10 @@ class Product extends React.Component {
                       <div className="edit-group">
                         <label>Show Other Quantity:</label>
                         <input type="checkbox" onChange={(e) => this.setState({ editShowOtherQuantity: !editShowOtherQuantity })} checked={editShowOtherQuantity} />
+                      </div>
+                      <div className="edit-group">
+                        <label>Unit:</label>
+                        <input type="text" onChange={(e) => this.setState({ editUnit: e.target.value })} className="c-form-input" value={editUnit} />
                       </div>
                     </React.Fragment>
                   )}
