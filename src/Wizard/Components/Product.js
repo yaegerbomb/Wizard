@@ -77,6 +77,49 @@ class Product extends React.Component {
         });
       }
     }
+
+    let editModel = {};
+    let modified = false;
+    if (this.state.editPrice !== this.props.component.price) {
+      editModel.editPrice = this.props.component.price;
+      modified = true;
+    }
+
+    if (this.state.editByGlobal !== this.props.component.byGlobal) {
+      editModel.editByGlobal = this.props.component.byGlobal;
+      modified = true;
+    }
+
+    if (this.state.editMinCharge !== this.props.component.minCharge) {
+      editModel.editMinCharge = this.props.component.minCharge;
+      modified = true;
+    }
+
+    if (this.state.editOtherValueLabel !== this.props.component.otherValueLabel) {
+      editModel.editOtherValueLabel = this.props.component.otherValueLabel;
+      modified = true;
+    }
+
+    if (this.state.editOtherQuantityMin !== this.props.component.otherQuantityMin) {
+      editModel.editOtherQuantityMin = this.props.component.otherQuantityMin;
+      modified = true;
+    }
+
+    if (this.state.editShowOtherQuantity !== this.props.component.showOtherQuantity) {
+      editModel.editShowOtherQuantity = this.props.component.showOtherQuantity;
+      modified = true;
+    }
+
+    if (this.state.editUnit !== this.props.component.unit) {
+      editModel.editUnit = this.props.component.unit;
+      modified = true;
+    }
+
+    if (modified) {
+      this.setState({
+        ...editModel
+      });
+    }
   }
 
   editLabel = () => {
